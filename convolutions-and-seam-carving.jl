@@ -163,6 +163,15 @@ end
 # ╔═╡ 8170e45d-9436-41c6-98f1-3c8fbbf42e5f
 ImageToCarve = wave
 
+# ╔═╡ e333cc9c-cbf2-4a57-b09f-c2333c97eabe
+size(ImageToCarve)
+
+# ╔═╡ 3b7789af-ccfd-4616-af05-be9e35f3a2ec
+imageToResize = wave
+
+# ╔═╡ b483ca6d-0125-419a-839d-09972c293949
+size(imageToResize)
+
 # ╔═╡ 886d4189-651a-47b1-ad89-6b7e2a684978
 begin
 	persistenceofmemory ="https://i.gyazo.com/48241fbf4e652c1eeaf73c599deb5025.jpg"
@@ -187,8 +196,7 @@ end
 
 # ╔═╡ 4eaeba26-316b-4edd-a580-c3b218d3826b
 begin
-	image3url = "file:///C:/Users/santt/Downloads/Hiroshige,_Night_View_of_Saruwaka-machi.jpg"
-	download(image3url, "hiroshige.jpg")
+	load("hiroshige.jpg")
 	big_hiroshige = load("hiroshige.jpg")
 	image3 = scale_image(big_hiroshige, 0.6)
 end
@@ -705,9 +713,6 @@ end
 
 # ╔═╡ d828b425-051e-4e75-8bda-e27ba8bc4ed6
 [edges2(image) edges(image)]
-
-# ╔═╡ c92f0304-c0a2-45c8-bd14-f6a289d805ff
-edges2(wave)
 
 # ╔═╡ b6426840-25cf-4f08-9c1d-604ffbd540c8
 edge = edges2(image2)
@@ -1421,6 +1426,35 @@ function SeamAdding1(img, target_height, target_width)
 
     return img
 end
+
+# ╔═╡ 57e8bc18-ca90-472b-a2e0-6d5a4d0aed32
+function Resize(img, target_height, target_width)
+	height, width = size(img)
+	if target_height < height && target_width < width
+		return SeamCarving(img, target_height, target_width)
+		
+	elseif target_height > height && target_width > width
+		return SeamAdding(img, target_height, target_width)
+		
+	elseif target_height < height && target_width > width
+		img = SeamCarving_X(img, target_height)
+		img = SeamAdding_Y(img, target_width)
+		return img
+	elseif target_height > height && target_width < width
+		img = SeamCarving_Y(img, target_width)
+		img = SeamAdding_X(img, target_height)
+		return img
+	end
+end
+
+# ╔═╡ 6a7bc37d-e61c-434a-a92e-71dd3e2b677c
+resized = Resize(imageToResize, 1100, 1460)
+
+# ╔═╡ 2b75bdb9-668f-4552-a586-1b9604b8a518
+size(resized)
+
+# ╔═╡ f2277013-9f05-42ea-8ee0-8a415b5648b4
+hbox(imageToResize, resized)
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -3235,15 +3269,14 @@ version = "1.4.1+1"
 # ╠═4621e53c-07ba-4e55-ab68-205353156181
 # ╟─6215b5c6-82bb-48e4-ae42-d02d4b6f3132
 # ╟─69ae0195-5726-405e-9cf8-fbdd30c0d3eb
-# ╟─76b12046-e63d-4c85-9bf0-9fc95bba7391
+# ╠═76b12046-e63d-4c85-9bf0-9fc95bba7391
 # ╟─8fd5a173-3efe-4554-955c-f1281323dd9f
 # ╟─d828b425-051e-4e75-8bda-e27ba8bc4ed6
 # ╟─28dafdf8-4ed1-48cf-9fe2-6b669ed16aba
-# ╟─c92f0304-c0a2-45c8-bd14-f6a289d805ff
 # ╟─b2b8ec59-f073-4faf-a549-4a0cca54348e
 # ╟─886d4189-651a-47b1-ad89-6b7e2a684978
 # ╟─b9eda326-f335-4566-aa6b-a4d25e5f8d2a
-# ╟─b6426840-25cf-4f08-9c1d-604ffbd540c8
+# ╠═b6426840-25cf-4f08-9c1d-604ffbd540c8
 # ╠═fe6f830b-c2d7-4317-b647-27a6858cc2f3
 # ╠═67db4cf2-be2b-437c-bcb7-0de160d551fc
 # ╠═066049e4-d67a-4765-9e92-1c5a408ccbdd
@@ -3274,6 +3307,7 @@ version = "1.4.1+1"
 # ╟─0570e1fd-6cb9-43cc-bbf3-da91d6c30ee4
 # ╠═a8fc675e-9a2a-4efa-84d3-a5ee8dd74ce4
 # ╠═6ae230e8-af2c-47de-b884-64119b106e1a
+# ╠═e333cc9c-cbf2-4a57-b09f-c2333c97eabe
 # ╠═dd2725de-1d81-4262-91ea-6c2df5e11495
 # ╠═0edbf691-6e01-4bce-9ed8-e712eb37ca1d
 # ╟─78d7f0e8-60a6-427d-93cd-666672298d0c
@@ -3307,13 +3341,18 @@ version = "1.4.1+1"
 # ╟─57cf5b1e-5d33-448d-a672-b06e7318a51a
 # ╟─7b828088-0906-46fd-b9c3-25516b577808
 # ╟─e093acf2-c092-4f39-83bb-ea5bf050c82c
+# ╟─3b7789af-ccfd-4616-af05-be9e35f3a2ec
+# ╠═b483ca6d-0125-419a-839d-09972c293949
+# ╠═6a7bc37d-e61c-434a-a92e-71dd3e2b677c
+# ╠═2b75bdb9-668f-4552-a586-1b9604b8a518
+# ╟─f2277013-9f05-42ea-8ee0-8a415b5648b4
 # ╟─baa9b63d-7109-4c1d-9251-2689daab0b8f
 # ╠═16ed7e4e-f70e-11ee-29ca-9d31a0704ed2
 # ╟─7a21d992-dcac-42e0-867e-2348e54b7018
 # ╟─f175daa0-ea50-4e99-821c-f916756d8222
 # ╟─7a22b815-f79e-4648-89be-7d0a1be3ee4d
 # ╟─4bacc97c-e169-406a-ac0e-b17495cbd33e
-# ╠═a92b71eb-38f4-4e12-a86f-634bac10d03f
+# ╟─a92b71eb-38f4-4e12-a86f-634bac10d03f
 # ╟─fd498b6c-6dee-416a-9bfa-fb1132526dfe
 # ╟─cc76745a-a351-489e-a2ab-b98e1e96fd09
 # ╟─0960477a-0442-4e4d-b265-9f5e9babda86
@@ -3328,7 +3367,7 @@ version = "1.4.1+1"
 # ╟─7b31abbd-8f3a-4b12-b9fd-949be9fc9b3c
 # ╟─78777334-b791-4dab-8624-7e87bd4eeb5c
 # ╠═2022992c-714c-440d-8c30-8f0038ff317e
-# ╠═2c7dc971-641c-423e-8f57-e03891959be3
+# ╟─2c7dc971-641c-423e-8f57-e03891959be3
 # ╟─7783364a-3d48-485b-92c4-532a3306cb9c
 # ╟─0396b46a-7070-498b-8c59-605f4fe30a9d
 # ╟─76360fb4-5678-4a53-8f14-03ad16c26a83
@@ -3356,5 +3395,6 @@ version = "1.4.1+1"
 # ╠═77fc6bb2-2878-428c-8c08-f3778da2c4ee
 # ╠═b698e689-7e30-4846-afbf-e5c0f3873b6c
 # ╠═9eb10d09-dfac-44ac-b38d-e469d9e75fa3
+# ╠═57e8bc18-ca90-472b-a2e0-6d5a4d0aed32
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002

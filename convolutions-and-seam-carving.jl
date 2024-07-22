@@ -64,7 +64,7 @@ begin
 end
 
 # ╔═╡ 761d8a4f-f508-4d15-bc04-65f1a10b0196
-kernel2 = [
+kernel = [
 	1/9 1/9 1/9
 	1/9 1/9 1/9
 	1/9 1/9 1/9
@@ -74,17 +74,21 @@ kernel2 = [
 gauss = Kernel.gaussian((2,2))
 
 # ╔═╡ 63d2c6cf-c39c-4076-9641-8e548d4d37d0
-kernel1 = Kernel.sobel()[1]
+sobel = Kernel.sobel()[1]
 
 # ╔═╡ 4d10ee5d-2355-4a92-8838-fc85737b28e4
-kernel = [
+kernel2 = [
 	-0.5  -1  -0.5
 	-1   7   -1
 	-0.5  -1  -0.5
 ]
 
 # ╔═╡ ad78688a-20b1-46bd-94cc-5dd5ab1c4a51
-
+kernel3 = [
+		-1.0 -1.0 -1.0
+		-1.0 8.0 -1.0
+		-1.0 -1.0 -1.0
+	]
 
 # ╔═╡ f69b9f69-37ac-4c79-9083-c37e2c34e1d8
 
@@ -94,8 +98,8 @@ md"## Image Resizing With Seams"
 
 # ╔═╡ 05d87004-209a-4198-b62b-f3285e5d1166
 begin
-	path = "C:/Users/santt/Pictures/Saved Pictures/ball.png"
-	small_ball = load(path)
+	#path = "C:/Users/santt/Pictures/Saved Pictures/ball.png"
+	small_ball = load("ball.png")
 	scale = 5.0
 	new = trunc.(Int, size(small_ball) .* scale)
 	ball = imresize(small_ball, (new))
@@ -106,6 +110,9 @@ Sy, Sx = Kernel.sobel()
 
 # ╔═╡ d7abf0c7-4ca8-4530-adbc-189196fdba92
 Sy[1,1]
+
+# ╔═╡ 6215b5c6-82bb-48e4-ae42-d02d4b6f3132
+md""" Second derivative produces zero crossings at edges """
 
 # ╔═╡ a3ce16b4-19a6-4cc9-bede-5b2fcc59e738
 
@@ -254,7 +261,13 @@ end
 show_kernel(gauss)
 
 # ╔═╡ 589c2ca0-e9d8-40d9-8e65-2170cbd75aef
-show_kernel(kernel1)
+show_kernel(sobel)
+
+# ╔═╡ b50d7a3a-b980-4a0a-9515-abab70e93370
+show_kernel(kernel2)
+
+# ╔═╡ 83cb7719-0a9a-4957-93e2-fa59ab1b00d5
+show_kernel(kernel3)
 
 # ╔═╡ b277e483-f577-40d8-a57b-93513621a0e9
 [show_kernel(Sx) show_kernel(Sy)]
@@ -275,6 +288,9 @@ function hbox(x, y, gap=16; sy=size(y), sx=size(x))
 	slate[1:size(y,1), size(x,2) + gap .+ (1:size(y,2))] .= RGB.(y)
 	slate
 end
+
+# ╔═╡ a92b71eb-38f4-4e12-a86f-634bac10d03f
+vbox(x,y, gap=16) = hbox(x', y')'
 
 # ╔═╡ fd498b6c-6dee-416a-9bfa-fb1132526dfe
 function indexOrZero(v::AbstractVector, i)
@@ -471,6 +487,9 @@ convolvedImage = convolve(image, gauss)
 # ╔═╡ 93d20de9-cd4d-4a47-92b5-f78bd2e80781
 [image convolvedImage]
 
+# ╔═╡ a6586b85-30df-4f9e-8d2a-07dd6f9a2679
+convolve(image, kernel3)
+
 # ╔═╡ 1860775b-94e0-4479-b3e8-6bfed9396cf3
 [convolve(ball,Sx) convolve(ball,Sy)]
 
@@ -478,6 +497,9 @@ convolvedImage = convolve(image, gauss)
 function brightness(img)
 	return img = 0.3 * img.r + 0.59 * img.g + 0.11 * img.b
 end
+
+# ╔═╡ 2c63b06f-1a90-445c-ba3c-485ef5110dc2
+[show_image(convolve(brightness.(ball),Sx)) show_image(convolve(brightness.(ball),Sy))]
 
 # ╔═╡ 8fd5a173-3efe-4554-955c-f1281323dd9f
 [show_image(convolve(brightness.(image), Sx)) show_image(convolve(brightness.(image), Sy))]
@@ -671,8 +693,15 @@ function edges2(img)
 	∇y = convolve(b, Sy)
 	∇x = convolve(b, Sx)
 
-	sqrt.(∇x.^2 + ∇y.^2)
+	edge = sqrt.(∇x.^2 + ∇y.^2)
+	edge ./ maximum(edge)
 end
+
+# ╔═╡ 4621e53c-07ba-4e55-ab68-205353156181
+[edges2(ball) edges2(edges2(ball))]
+
+# ╔═╡ 76b12046-e63d-4c85-9bf0-9fc95bba7391
+[edges2(edges2(image)) edges(image)]
 
 # ╔═╡ d828b425-051e-4e75-8bda-e27ba8bc4ed6
 [edges2(image) edges(image)]
@@ -3190,16 +3219,23 @@ version = "1.4.1+1"
 # ╠═63d2c6cf-c39c-4076-9641-8e548d4d37d0
 # ╠═589c2ca0-e9d8-40d9-8e65-2170cbd75aef
 # ╟─4d10ee5d-2355-4a92-8838-fc85737b28e4
+# ╠═b50d7a3a-b980-4a0a-9515-abab70e93370
 # ╟─ad78688a-20b1-46bd-94cc-5dd5ab1c4a51
+# ╠═83cb7719-0a9a-4957-93e2-fa59ab1b00d5
+# ╠═a6586b85-30df-4f9e-8d2a-07dd6f9a2679
 # ╟─f69b9f69-37ac-4c79-9083-c37e2c34e1d8
 # ╟─01d73ebe-277d-4fba-b680-0f87b8cc5280
 # ╟─05d87004-209a-4198-b62b-f3285e5d1166
 # ╠═a61b28d1-3cc0-439d-bd41-e791dc0ee21d
 # ╠═d7abf0c7-4ca8-4530-adbc-189196fdba92
 # ╠═b277e483-f577-40d8-a57b-93513621a0e9
-# ╠═1860775b-94e0-4479-b3e8-6bfed9396cf3
-# ╠═582e0e2e-a796-4c7c-bff9-848c6fedb46f
+# ╟─1860775b-94e0-4479-b3e8-6bfed9396cf3
+# ╟─2c63b06f-1a90-445c-ba3c-485ef5110dc2
+# ╟─582e0e2e-a796-4c7c-bff9-848c6fedb46f
+# ╠═4621e53c-07ba-4e55-ab68-205353156181
+# ╟─6215b5c6-82bb-48e4-ae42-d02d4b6f3132
 # ╟─69ae0195-5726-405e-9cf8-fbdd30c0d3eb
+# ╟─76b12046-e63d-4c85-9bf0-9fc95bba7391
 # ╟─8fd5a173-3efe-4554-955c-f1281323dd9f
 # ╟─d828b425-051e-4e75-8bda-e27ba8bc4ed6
 # ╟─28dafdf8-4ed1-48cf-9fe2-6b669ed16aba
@@ -3277,6 +3313,7 @@ version = "1.4.1+1"
 # ╟─f175daa0-ea50-4e99-821c-f916756d8222
 # ╟─7a22b815-f79e-4648-89be-7d0a1be3ee4d
 # ╟─4bacc97c-e169-406a-ac0e-b17495cbd33e
+# ╠═a92b71eb-38f4-4e12-a86f-634bac10d03f
 # ╟─fd498b6c-6dee-416a-9bfa-fb1132526dfe
 # ╟─cc76745a-a351-489e-a2ab-b98e1e96fd09
 # ╟─0960477a-0442-4e4d-b265-9f5e9babda86
@@ -3290,8 +3327,8 @@ version = "1.4.1+1"
 # ╟─9e4c1c18-cab2-441f-8550-35f5e9b4df30
 # ╟─7b31abbd-8f3a-4b12-b9fd-949be9fc9b3c
 # ╟─78777334-b791-4dab-8624-7e87bd4eeb5c
-# ╟─2022992c-714c-440d-8c30-8f0038ff317e
-# ╟─2c7dc971-641c-423e-8f57-e03891959be3
+# ╠═2022992c-714c-440d-8c30-8f0038ff317e
+# ╠═2c7dc971-641c-423e-8f57-e03891959be3
 # ╟─7783364a-3d48-485b-92c4-532a3306cb9c
 # ╟─0396b46a-7070-498b-8c59-605f4fe30a9d
 # ╟─76360fb4-5678-4a53-8f14-03ad16c26a83

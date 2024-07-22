@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.40
+# v0.19.42
 
 using Markdown
 using InteractiveUtils
@@ -110,9 +110,6 @@ Sy[1,1]
 # ╔═╡ a3ce16b4-19a6-4cc9-bede-5b2fcc59e738
 
 
-# ╔═╡ 0ad2901d-ad54-4a64-83e8-411c788f0f19
-
-
 # ╔═╡ baa9b63d-7109-4c1d-9251-2689daab0b8f
 md"## Function definitions"
 
@@ -183,10 +180,10 @@ end
 
 # ╔═╡ 4eaeba26-316b-4edd-a580-c3b218d3826b
 begin
-	image3url = "https://i.gyazo.com/a6fddf8de5e7d2b2a6045a12440c4565.jpg"
+	image3url = "file:///C:/Users/santt/Downloads/Hiroshige,_Night_View_of_Saruwaka-machi.jpg"
 	download(image3url, "hiroshige.jpg")
 	big_hiroshige = load("hiroshige.jpg")
-	image3 = scale_image(big_hiroshige, 0.8)
+	image3 = scale_image(big_hiroshige, 0.6)
 end
 
 # ╔═╡ 49b41bfe-850f-4ca6-9190-f3cb6432a506
@@ -214,13 +211,38 @@ end
 # ╔═╡ 20cd3f94-796e-4488-af50-d8a6a45119d3
 size(image5)
 
-# ╔═╡ f1e67d5f-ffa3-43ca-9156-a4369f293880
-begin
-	dolphinurl = "https://i.gyazo.com/37d97480bd6b78047fd17c9d1ab7eaba.jpg"
-	download(dolphinurl, "dolphin.jpg")
-	big_dolphin = load("dolphin.jpg")
-	dolphin = scale_image(big_dolphin, 1.3)
+# ╔═╡ e6ccde94-7e14-482a-b97f-4fb764674eae
+begin 
+	giraffeurl = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Giraffe_Mikumi_National_Park.jpg/1200px-Giraffe_Mikumi_National_Park.jpg"
+	download(giraffeurl, "giraffe.jpg")
+	big_giraffe = load("giraffe.jpg")
+	giraffe = scale_image(big_giraffe, 0.3)
 end
+
+# ╔═╡ 34f7b8ed-813f-4afd-aa61-88471db1714e
+size(giraffe)
+
+# ╔═╡ 879ed4d3-a846-4ea9-b3c7-f17f9518fe29
+begin
+	bench_url = "https://pages.cs.wisc.edu/~moayad/cs766/midterm_images/bench3.png"
+	download(bench_url, "bench.png")
+	og_bench = load("bench.png")
+	bench = scale_image(og_bench, 0.8)
+end
+
+# ╔═╡ 140b40e3-745d-4379-978d-fd7854a97c2d
+size(bench)
+
+# ╔═╡ e3e86596-6604-46f9-a6df-82ef7ee21ebb
+begin
+	birdurl = "https://static.scientificamerican.com/sciam/cache/file/7A715AD8-449D-4B5A-ABA2C5D92D9B5A21_source.png?w=1200"
+	download(birdurl, "bird.png")
+	bigbird = load("bird.png")
+	bird = scale_image(bigbird, 0.4)
+end
+
+# ╔═╡ 241c6fc4-d556-446a-ac0a-871b1bc1709c
+size(bird)
 
 # ╔═╡ f175daa0-ea50-4e99-821c-f916756d8222
 function show_kernel(kernel)
@@ -638,6 +660,9 @@ edges(image4)
 # ╔═╡ 22ad9ba6-7d35-420a-a7d1-52ea948134e6
 edges(image5)
 
+# ╔═╡ 57cf5b1e-5d33-448d-a672-b06e7318a51a
+edges(bird)
+
 # ╔═╡ 2c7dc971-641c-423e-8f57-e03891959be3
 function edges2(img)
 	Sy, Sx = Kernel.sobel()
@@ -725,6 +750,9 @@ top = emap[1,:]
 # ╔═╡ 3e188be8-08c5-4b60-abd6-cc9814dddf8b
 directions = LeastEnergyMap_X(edgyness)[2]
 
+# ╔═╡ e093acf2-c092-4f39-83bb-ea5bf050c82c
+show_image(LeastEnergyMap_X(edges(bird))[1])
+
 # ╔═╡ fb5de843-f7b5-40ac-a822-0079033bd9c9
 #              E[x, y]
 #          ↙      ↓      ↘ 
@@ -772,6 +800,9 @@ show_image(LeastEnergyMap_Y(edges(image3))[1])
 
 # ╔═╡ 8b7ad2c5-2fc3-4e16-bb47-6b60bdc40083
 show_image(LeastEnergyMap_Y(edges(image5))[1])
+
+# ╔═╡ 7b828088-0906-46fd-b9c3-25516b577808
+show_image(LeastEnergyMap_Y(edges(bird))[1])
 
 # ╔═╡ 26b22c6f-8305-4114-8f95-5969a69ffff6
 function FindSeamAt_X(directions, position)
@@ -999,10 +1030,10 @@ hbox(ImageToCarve, carved_image, sy=size(ImageToCarve), sx=size(carved_image))
 size(carved_image)
 
 # ╔═╡ 9c461725-fc55-4d28-835a-fbf3831cf06d
-function SeamOrder_X(image, n)
+function SeamOrder_X(image, m)
 	order = []#[zeros(Int, n)]
 
-	for i in 1:n
+	for i in 1:m
 		energy = edges(image)
 		leastE_map, directions = LeastEnergyMap_X(energy)
 		_, position = findmin(leastE_map[:,1])
@@ -1028,19 +1059,106 @@ function SeamOrder_Y(image, n)
 	end
 
 	return order
-	#=for i in 1:n
-		l, index = findmin(top_row)
-		push!(order, index)#order[i] = index
-		top_row[index] = Inf
-	end
-	return order, directions=#
 end
 
-# ╔═╡ fd6b76d8-ebcb-4093-b17c-2c15c20bc8c4
-SeamOrder_Y(wave, 1700-size(wave)[2])
+# ╔═╡ a7ecf354-59aa-40fb-bfae-beb200664a91
+function SeamOrder(image, n, m)
+	orderY = []
+	orderX = []
+	seamEnergyY = []
+	seamEnergyX = []
+
+	for i in 1:n
+		energy = edges(image)
+		leastE_map, directions = LeastEnergyMap_Y(energy)
+		leastE, position = findmin(leastE_map[1,:])
+		seam = FindSeamAt_Y(directions, position)
+		image = RemoveSeam_Y(image, seam)
+		push!(seamEnergyY, leastE)
+		push!(orderY, seam)
+	end
+
+	for i in 1:m
+		energy = edges(image)
+		leastE_map, directions = LeastEnergyMap_X(energy)
+		leastE, position = findmin(leastE_map[:,1])
+		seam = FindSeamAt_X(directions, position)
+		image = RemoveSeam_X(image, seam)
+		push!(seamEnergyX, leastE)
+		push!(orderX, seam)
+	end
+
+	averageE_Y = sum(seamEnergyY) / n
+	averageE_X = sum(seamEnergyX) / m
+
+	return orderY, orderX, averageE_Y, averageE_X
+end
+
+# ╔═╡ 07ae1e36-46f4-4372-8f23-28c8b31a2d1a
+function adjust_indices_X(seams, image_width)
+    adjusted_seams = []
+    for (i, seam) in enumerate(seams)
+        adjusted_seam = []
+        for x in 1:image_width
+            y = seam[x]
+            # Adjust y based on the number of seams already inserted before this one
+            adjusted_y = y + sum([1 for s in adjusted_seams if s[x] <= y])
+            push!(adjusted_seam, adjusted_y)
+        end
+        push!(adjusted_seams, adjusted_seam)
+    end
+    return adjusted_seams
+end
+
+# ╔═╡ 6e6740b0-13c2-4925-ba86-654c3093f977
+function adjust_indices_Y(seams, image_height)
+    adjusted_seams = []
+    for (i, seam) in enumerate(seams)
+        adjusted_seam = []
+        for y in 1:image_height
+            x = seam[y]
+            # Adjust x based on the number of seams already inserted before this one
+            adjusted_x = x + sum([1 for s in adjusted_seams if s[y] <= x])
+            push!(adjusted_seam, adjusted_x)
+        end
+        push!(adjusted_seams, adjusted_seam)
+    end
+    return adjusted_seams
+end
+
+# ╔═╡ e920d8bb-300a-4445-ba78-d9d57842627d
+function adjust_indices(seamOrder, img_height, img_width)
+    adjusted_seams = []
+    x_count = 0
+    y_count = 0
+    
+    for (direction, seam) in seamOrder
+        if direction == "y"
+            adjusted_seam = []
+            for y in 1:img_height
+                x = seam[y]
+                adjusted_x = x + sum([1 for (d, s) in adjusted_seams if d == "y" && s[y] <= x])
+                push!(adjusted_seam, adjusted_x)
+            end
+            push!(adjusted_seams, ("y", adjusted_seam))
+            y_count += 1
+        else
+            adjusted_seam = []
+            for x in 1:img_width
+                y = seam[x]
+                adjusted_y = y + sum([1 for (d, s) in adjusted_seams if d == "x" && s[x] <= y])
+                push!(adjusted_seam, adjusted_y)
+            end
+            push!(adjusted_seams, ("x", adjusted_seam))
+            x_count += 1
+        end
+    end
+
+    return adjusted_seams
+end
 
 # ╔═╡ cf1766bf-49ef-422c-99fa-9123efe00485
-function AddSeam_X(image::Matrix{T}, seam::Vector{Int}) where T
+function AddSeam_X(image::Matrix{T}, seam) where T
     resolution = (size(image)[1] + 1, size(image)[2])
     new_image = Matrix{T}(undef, resolution)
 
@@ -1061,127 +1179,7 @@ function AddSeam_X(image::Matrix{T}, seam::Vector{Int}) where T
     return new_image
 end
 
-# ╔═╡ 701229cb-d560-42e9-a1ab-8ab11b7ade07
-#=╠═╡
-seam_added = AddSeam_Y(image2, FindSeam_Y(LeastEnergyMap_Y(edges(image2))[1]))
-  ╠═╡ =#
-
-# ╔═╡ 8b58ab34-18e4-4d92-b52e-bad87cae91e4
-function SeamAdding_X(img, height)
-	img_height = size(img)[1]
-	if height < 0 || height < img_height
-		return "provide a width greater than that of the images"
-	end
-
-		# To avoid adding the same lowest value seam over and over, 
-		# the seams should be added in the order of "removal".
-		# Adding the lowest value seam and then the next lowest
-		# produces the wanted effect
-
-	#energy = edges(img)
-	n = height - img_height
-	seams = SeamOrder_X(img, n)
-	
-	for i in 1:n
-		seam = seams[i]#FindSeamAt_Y(directions, seams[i])
-		img = AddSeam_X(img, seam)
-	end
-	return img
-end
-
-# ╔═╡ 77fc6bb2-2878-428c-8c08-f3778da2c4ee
-#=╠═╡
-function SeamAdding_Y(img, width)
-	img_width = size(img)[2]
-	if width < 0 || width < img_width
-		return "provide a width greater than that of the images"
-	end
-
-		# To avoid adding the same lowest value seam over and over, 
-		# the seams should be added in the order of "removal".
-		# Adding the lowest value seam and then the next lowest
-		# produces the wanted effect
-
-	#energy = edges(img)
-	n = width - img_width
-	seams = SeamOrder_Y(img, n)
-	
-	for i in 1:n
-		seam = seams[i]#FindSeamAt_Y(directions, seams[i])
-		img = AddSeam_Y(img, seam)
-	end
-	return img
-end
-  ╠═╡ =#
-
-# ╔═╡ dd2725de-1d81-4262-91ea-6c2df5e11495
-#=╠═╡
-seamsAdded = SeamAdding_Y(wave, 1700)
-  ╠═╡ =#
-
-# ╔═╡ 0edbf691-6e01-4bce-9ed8-e712eb37ca1d
-#=╠═╡
-size(seamsAdded)
-  ╠═╡ =#
-
-# ╔═╡ 78d7f0e8-60a6-427d-93cd-666672298d0c
-#=╠═╡
-hbox(wave, seamsAdded)
-  ╠═╡ =#
-
-# ╔═╡ ecb6ed97-8590-4101-8df1-9a598f734892
-#=╠═╡
-wider = SeamAdding_Y(image3, 430)
-  ╠═╡ =#
-
-# ╔═╡ 046f2d5c-11ff-450c-a4cf-3eeacb3cd9d6
-#=╠═╡
-hbox(image3, wider)
-  ╠═╡ =#
-
-# ╔═╡ 0ccdd4a3-e8db-4d24-8da9-629cea9c7479
-#=╠═╡
-fuji = SeamAdding_Y(image4, 500)
-  ╠═╡ =#
-
-# ╔═╡ 4ea5da47-e0e2-4b5d-bb50-d9105e9e63a2
-#=╠═╡
-hbox(image4, fuji)
-  ╠═╡ =#
-
-# ╔═╡ 9c131970-d45c-4f51-86cd-6cf6f3f4718a
-#=╠═╡
-hbox(image5, SeamAdding_Y(image5, 450))
-  ╠═╡ =#
-
-# ╔═╡ 0bd5e0f8-9a18-49dd-9576-a2ef87704339
-# ╠═╡ disabled = true
-#=╠═╡
-function AddSeam_Y(image::Matrix{T}, seam) where T
-    resolution = (size(image)[1], size(image)[2]+1)
-    new_image = Matrix{T}(undef, resolution)
-
-    for i = 1:length(seam)
-        if seam[i] > 1 && seam[i] < size(image)[2]
-            new_image[i, :] .= vcat(image[i, 1:seam[i]], 
-                                    (image[i, seam[i]] + image[i, seam[i]+1]) / 2, 
-                                    image[i, seam[i]+1:end])
-        elseif seam[i] == 1
-            new_image[i, :] = vcat(image[i, 1], 
-                                   (image[i, 1] + image[i, 2]) / 2, 
-                                   image[i, 2:end])
-        elseif seam[i] == size(image)[2]
-            new_image[i, :] = vcat(image[i, 1:end], 
-                                   (image[i, end] + image[i, end-1]) / 2)
-        end
-    end
-    return new_image
-end
-
-  ╠═╡ =#
-
 # ╔═╡ 75d03671-c3f0-4049-bb80-d3e2537def12
-#=╠═╡
 function AddSeam_Y(image::Matrix{T}, seam) where T
     resolution = (size(image)[1], size(image)[2]+1)
     new_image = Matrix{T}(undef, resolution)
@@ -1202,35 +1200,198 @@ function AddSeam_Y(image::Matrix{T}, seam) where T
     end
     return new_image
 end
-  ╠═╡ =#
 
-# ╔═╡ 2515968b-a577-4f42-8d79-a4341b25435e
-# ╠═╡ disabled = true
-#=╠═╡
-function AddSeam_Y(image::Matrix{T}, seam) where T
-    resolution = (size(image)[1], size(image)[2]+1)
-    new_image = Matrix{T}(undef, resolution)
+# ╔═╡ 701229cb-d560-42e9-a1ab-8ab11b7ade07
+seam_added = AddSeam_Y(image2, FindSeam_Y(LeastEnergyMap_Y(edges(image2))[1]))
 
-    for i = 1:length(seam)
-        if seam[i] > 1 && seam[i] < size(image)[2]
-            new_image[i, :] .= vcat(image[i, 1:seam[i]], 
-                                    (image[i, seam[i]] + image[i, seam[i]+1]) / 2, 
-                                    image[i, seam[i]+1:end])
-        elseif seam[i] == 1
-            new_image[i, :] = vcat(image[i, 1], 
-                                   (image[i, 1] + image[i, 2]) / 2, 
-                                   image[i, 2:end])
-        elseif seam[i] == size(image)[2]
-            new_image[i, :] = vcat(image[i, 1:end], 
-                                   (image[i, end] + image[i, end-1]) / 2)
-        else
-            error("Seam index out of bounds at row $i: seam[i] = $(seam[i])")
-        end
-    end
-    return new_image
+# ╔═╡ 8b58ab34-18e4-4d92-b52e-bad87cae91e4
+function SeamAdding_X(img, height)
+	img_height, img_width = size(img)
+	if height < 0 || height < img_height
+		return "provide a width greater than that of the images"
+	end
+
+		# To avoid adding the same lowest value seam over and over, 
+		# the seams should be added in the order of "removal".
+		# Adding the lowest value seam and then the next lowest
+		# produces the wanted effect
+
+	n = height - img_height
+	seamOrder = SeamOrder_X(img, n)
+	seams = adjust_indices_X(seamOrder, img_width)
+	
+	for i in 1:n
+		seam = seams[i]
+		img = AddSeam_X(img, seam)
+	end
+	return img
 end
 
-  ╠═╡ =#
+# ╔═╡ cf641a29-14cd-411f-b0e4-86164cfa54ad
+hbox(giraffe, SeamAdding_X(giraffe, 525))
+
+# ╔═╡ 77fc6bb2-2878-428c-8c08-f3778da2c4ee
+function SeamAdding_Y(img, width)
+	img_height, img_width = size(img)
+	if width < 0 || width < img_width
+		return "provide a width greater than that of the images"
+	end
+
+		# To avoid adding the same lowest value seam over and over, 
+		# the seams should be added in the order of "removal".
+		# Adding the lowest value seam and then the next lowest
+		# produces the wanted effect
+
+	n = width - img_width
+	seamOrder = SeamOrder_Y(img, n)
+	seams = adjust_indices_Y(seamOrder, img_height)
+	
+	for i in 1:n
+		seam = seams[i]
+		img = AddSeam_Y(img, seam)
+	end
+	return img
+end
+
+# ╔═╡ dd2725de-1d81-4262-91ea-6c2df5e11495
+seamsAdded = SeamAdding_Y(wave, 1750)
+
+# ╔═╡ 0edbf691-6e01-4bce-9ed8-e712eb37ca1d
+size(seamsAdded)
+
+# ╔═╡ 78d7f0e8-60a6-427d-93cd-666672298d0c
+hbox(wave, seamsAdded)
+
+# ╔═╡ ecb6ed97-8590-4101-8df1-9a598f734892
+wider = SeamAdding_Y(image3, 460)
+
+# ╔═╡ 046f2d5c-11ff-450c-a4cf-3eeacb3cd9d6
+hbox(image3, wider)
+
+# ╔═╡ 0ccdd4a3-e8db-4d24-8da9-629cea9c7479
+fuji = SeamAdding_Y(image4, 500)
+
+# ╔═╡ 4ea5da47-e0e2-4b5d-bb50-d9105e9e63a2
+hbox(image4, fuji)
+
+# ╔═╡ 9c131970-d45c-4f51-86cd-6cf6f3f4718a
+hbox(image5, SeamAdding_Y(image5, 450))
+
+# ╔═╡ 7238526e-b1c9-4aac-a97b-139c53138803
+SeamAdding_Y(bench,500)
+
+# ╔═╡ b698e689-7e30-4846-afbf-e5c0f3873b6c
+function SeamAdding(img, target_height, target_width)
+	img_height, img_width = size(img)
+    if target_height <= img_height || target_width <= img_width
+        return "Provide a target size greater than the current size of the image"
+    end
+	m = target_height - img_height
+	n = target_width - img_width
+	
+
+	if img_height > img_width
+		seamOrderY = SeamOrder_Y(img, n)
+		seamsY = adjust_indices_Y(seamOrderY, size(img)[1])
+		for i in 1:n
+			seam = seamsY[i]
+			img = AddSeam_Y(img, seam)
+		end
+		seamOrderX = SeamOrder_X(img, m)
+		seamsX = adjust_indices_X(seamOrderX, size(img)[2])
+		for i in 1:m
+		seam = seamsX[i]
+		img = AddSeam_X(img, seam)
+		end
+	else
+		seamOrderX = SeamOrder_X(img, m)
+		seamsX = adjust_indices_X(seamOrderX, size(img)[2])
+		for i in 1:m
+		seam = seamsX[i]
+		img = AddSeam_X(img, seam)
+		end
+		seamOrderY = SeamOrder_Y(img, n)
+		seamsY = adjust_indices_Y(seamOrderY, size(img)[1])
+		for i in 1:n
+			seam = seamsY[i]
+			img = AddSeam_Y(img, seam)
+		end
+	end
+
+	return img
+end
+
+# ╔═╡ 9efde71a-6a45-4c2c-a7ab-236fdc07c549
+bigBird = SeamAdding(bird, 450, 540)
+
+# ╔═╡ e034819e-2f97-460f-a8d0-f0901ddfd40e
+size(bigBird)
+
+# ╔═╡ f3a45e02-2467-4e1a-b7d8-33b004dc2b97
+hbox(bird, bigBird)
+
+# ╔═╡ 9eb10d09-dfac-44ac-b38d-e469d9e75fa3
+function SeamAdding1(img, target_height, target_width) 
+	# Seams will become smaller than the image in at least one direction. 
+	# Adding a vertical seam adds width to the image.
+	# After that trying to add a horizontal seam doesn't work
+	# since the seam is smaller than the image.
+	# All seams are the width or height of the original image.
+    img_height, img_width = size(img)
+    if target_height <= img_height || target_width <= img_width
+        return "Provide a target size greater than the current size of the image"
+    end
+
+    n_height = target_height - img_height
+    n_width = target_width - img_width
+    seamOrder = []
+
+    temp_img = copy(img)
+    current_height, current_width = img_height, img_width
+
+    while true
+        if abs(current_height - img_height) == n_height
+            for _ in 1:(n_width - abs(current_width - img_width))
+                energy = edges(temp_img)
+                _, seam = FindSeam_X(energy)
+                push!(seamOrder, ("x", seam))
+                temp_img = RemoveSeam_Y(temp_img, seam)
+            end
+            break
+        elseif abs(current_width - img_width) == n_width
+            for _ in 1:(n_height - abs(current_height - img_height))
+                energy = edges(temp_img)
+                _, seam = FindSeam_Y(energy)
+                push!(seamOrder, ("y", seam))
+                temp_img = RemoveSeam_X(temp_img, seam)
+            end
+            break
+        else
+            energy = edges(temp_img)
+            direction, seam = FindSeam(energy)
+            push!(seamOrder, (direction, seam))
+            if direction == "x"
+                temp_img = RemoveSeam_X(temp_img, seam)
+                current_height -= 1
+            else
+                temp_img = RemoveSeam_Y(temp_img, seam)
+                current_width -= 1
+            end
+        end
+    end
+    
+    adjusted_seams = adjust_indices(seamOrder, img_height, img_width)
+    
+    for (direction, seam) in adjusted_seams
+        if direction == "x"
+            img = AddSeam_X(img, seam)
+        else
+            img = AddSeam_Y(img, seam)
+        end
+    end
+
+    return img
+end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -1260,7 +1421,7 @@ PlutoUI = "~0.7.58"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.10.2"
+julia_version = "1.10.3"
 manifest_format = "2.0"
 project_hash = "c22c6f4551fda6900e203efb84005469239a1841"
 
@@ -1277,9 +1438,9 @@ weakdeps = ["ChainRulesCore", "Test"]
 
 [[deps.AbstractPlutoDingetjes]]
 deps = ["Pkg"]
-git-tree-sha1 = "0f748c81756f2e5e6854298f11ad8b2dfae6911a"
+git-tree-sha1 = "6e1d2a35f2f90a4bc7c2ed98079b2ba09c35b83a"
 uuid = "6e696c72-6542-2067-7265-42206c756150"
-version = "1.3.0"
+version = "1.3.2"
 
 [[deps.Adapt]]
 deps = ["LinearAlgebra", "Requires"]
@@ -1297,20 +1458,21 @@ version = "1.1.1"
 
 [[deps.ArnoldiMethod]]
 deps = ["LinearAlgebra", "Random", "StaticArrays"]
-git-tree-sha1 = "62e51b39331de8911e4a7ff6f5aaf38a5f4cc0ae"
+git-tree-sha1 = "d57bd3762d308bded22c3b82d033bff85f6195c6"
 uuid = "ec485272-7323-5ecc-a04f-4719b315124d"
-version = "0.2.0"
+version = "0.4.0"
 
 [[deps.ArrayInterface]]
 deps = ["Adapt", "LinearAlgebra", "SparseArrays", "SuiteSparse"]
-git-tree-sha1 = "44691067188f6bd1b2289552a23e4b7572f4528d"
+git-tree-sha1 = "5c9b74c973181571deb6442d41e5c902e6b9f38e"
 uuid = "4fba245c-0d91-5ea0-9b3e-6abc04ee57a9"
-version = "7.9.0"
+version = "7.12.0"
 
     [deps.ArrayInterface.extensions]
     ArrayInterfaceBandedMatricesExt = "BandedMatrices"
     ArrayInterfaceBlockBandedMatricesExt = "BlockBandedMatrices"
     ArrayInterfaceCUDAExt = "CUDA"
+    ArrayInterfaceCUDSSExt = "CUDSS"
     ArrayInterfaceChainRulesExt = "ChainRules"
     ArrayInterfaceGPUArraysCoreExt = "GPUArraysCore"
     ArrayInterfaceReverseDiffExt = "ReverseDiff"
@@ -1321,6 +1483,7 @@ version = "7.9.0"
     BandedMatrices = "aae01518-5342-5314-be14-df237901396f"
     BlockBandedMatrices = "ffab5731-97b5-5995-9138-79e8c1846df0"
     CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
+    CUDSS = "45b445bb-4962-46a0-9369-b4df9d0f772e"
     ChainRules = "082447d4-558c-5d27-93f4-14fc19e9eca2"
     GPUArraysCore = "46192b85-c4d5-4398-a991-12ede77f4527"
     ReverseDiff = "37e2e3b7-166d-5795-8a7a-e32c996b4267"
@@ -1346,15 +1509,15 @@ version = "0.4.7"
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
 
 [[deps.BitFlags]]
-git-tree-sha1 = "2dc09997850d68179b69dafb58ae806167a32b1b"
+git-tree-sha1 = "0691e34b3bb8be9307330f88d1a3c3f25466c24d"
 uuid = "d1d4a3ce-64b1-5f1a-9ba4-7e7e69966f35"
-version = "0.1.8"
+version = "0.1.9"
 
 [[deps.BitTwiddlingConvenienceFunctions]]
 deps = ["Static"]
-git-tree-sha1 = "0c5f81f47bbbcf4aea7b2959135713459170798b"
+git-tree-sha1 = "f21cfd4950cb9f0587d5067e69405ad2acd27b87"
 uuid = "62783981-4cbd-42fc-bca8-16325de8dc4b"
-version = "0.1.5"
+version = "0.1.6"
 
 [[deps.Bzip2_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1369,15 +1532,15 @@ version = "0.5.0"
 
 [[deps.CPUSummary]]
 deps = ["CpuId", "IfElse", "PrecompileTools", "Static"]
-git-tree-sha1 = "601f7e7b3d36f18790e2caf83a882d88e9b71ff1"
+git-tree-sha1 = "5a97e67919535d6841172016c9530fd69494e5ec"
 uuid = "2a0fbf3d-bb9c-48f3-b0a9-814d99fd7ab9"
-version = "0.2.4"
+version = "0.2.6"
 
 [[deps.Cairo_jll]]
 deps = ["Artifacts", "Bzip2_jll", "CompilerSupportLibraries_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "JLLWrappers", "LZO_jll", "Libdl", "Pixman_jll", "Xorg_libXext_jll", "Xorg_libXrender_jll", "Zlib_jll", "libpng_jll"]
-git-tree-sha1 = "a4c43f59baa34011e303e76f5c8c91bf58415aaf"
+git-tree-sha1 = "a2f1c8c668c8e3cb4cca4e57a8efdb09067bb3fd"
 uuid = "83423d85-b0ee-5818-9007-b63ccbeb887a"
-version = "1.18.0+1"
+version = "1.18.0+2"
 
 [[deps.CatIndices]]
 deps = ["CustomUnitRanges", "OffsetArrays"]
@@ -1387,9 +1550,9 @@ version = "0.2.2"
 
 [[deps.ChainRulesCore]]
 deps = ["Compat", "LinearAlgebra"]
-git-tree-sha1 = "575cd02e080939a33b6df6c5853d14924c08e35b"
+git-tree-sha1 = "71acdbf594aab5bbb2cec89b208c41b4c411e49f"
 uuid = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
-version = "1.23.0"
+version = "1.24.0"
 weakdeps = ["SparseArrays"]
 
     [deps.ChainRulesCore.extensions]
@@ -1397,9 +1560,9 @@ weakdeps = ["SparseArrays"]
 
 [[deps.CloseOpenIntervals]]
 deps = ["Static", "StaticArrayInterface"]
-git-tree-sha1 = "70232f82ffaab9dc52585e0dd043b5e0c6b714f1"
+git-tree-sha1 = "05ba0d07cd4fd8b7a39541e31a7b0254704ea581"
 uuid = "fb6a15b2-703c-40df-9091-08a04967cfa9"
-version = "0.1.12"
+version = "0.1.13"
 
 [[deps.Clustering]]
 deps = ["Distances", "LinearAlgebra", "NearestNeighbors", "Printf", "Random", "SparseArrays", "Statistics", "StatsBase"]
@@ -1409,21 +1572,21 @@ version = "0.15.7"
 
 [[deps.CodecZlib]]
 deps = ["TranscodingStreams", "Zlib_jll"]
-git-tree-sha1 = "59939d8a997469ee05c4b4944560a820f9ba0d73"
+git-tree-sha1 = "b8fe8546d52ca154ac556809e10c75e6e7430ac8"
 uuid = "944b1d66-785c-5afd-91f1-9de20f533193"
-version = "0.7.4"
+version = "0.7.5"
 
 [[deps.ColorSchemes]]
 deps = ["ColorTypes", "ColorVectorSpace", "Colors", "FixedPointNumbers", "PrecompileTools", "Random"]
-git-tree-sha1 = "67c1f244b991cad9b0aa4b7540fb758c2488b129"
+git-tree-sha1 = "4b270d6465eb21ae89b732182c20dc165f8bf9f2"
 uuid = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
-version = "3.24.0"
+version = "3.25.0"
 
 [[deps.ColorTypes]]
 deps = ["FixedPointNumbers", "Random"]
-git-tree-sha1 = "eb7f0f8307f71fac7c606984ea5fb2817275d6e4"
+git-tree-sha1 = "b10d0b65641d57b8b4d5e234446582de5047050d"
 uuid = "3da002f7-5984-5a60-b8a6-cbb66c0b333f"
-version = "0.11.4"
+version = "0.11.5"
 
 [[deps.ColorVectorSpace]]
 deps = ["ColorTypes", "FixedPointNumbers", "LinearAlgebra", "Requires", "Statistics", "TensorCore"]
@@ -1439,15 +1602,20 @@ version = "0.10.0"
 
 [[deps.Colors]]
 deps = ["ColorTypes", "FixedPointNumbers", "Reexport"]
-git-tree-sha1 = "fc08e5930ee9a4e03f84bfb5211cb54e7769758a"
+git-tree-sha1 = "362a287c3aa50601b0bc359053d5c2468f0e7ce0"
 uuid = "5ae59095-9a9b-59fe-a467-6f913c188581"
-version = "0.12.10"
+version = "0.12.11"
+
+[[deps.CommonWorldInvalidations]]
+git-tree-sha1 = "ae52d1c52048455e85a387fbee9be553ec2b68d0"
+uuid = "f70d9fcc-98c5-4d4a-abd7-e4cdeebd8ca8"
+version = "1.0.0"
 
 [[deps.Compat]]
 deps = ["TOML", "UUIDs"]
-git-tree-sha1 = "c955881e3c981181362ae4088b35995446298b80"
+git-tree-sha1 = "b1c55339b7c6c350ee89f2c1604299660525b248"
 uuid = "34da2185-b29b-5c13-b0c7-acf172513d20"
-version = "4.14.0"
+version = "4.15.0"
 weakdeps = ["Dates", "LinearAlgebra"]
 
     [deps.Compat.extensions]
@@ -1456,7 +1624,7 @@ weakdeps = ["Dates", "LinearAlgebra"]
 [[deps.CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
-version = "1.1.0+0"
+version = "1.1.1+0"
 
 [[deps.ComputationalResources]]
 git-tree-sha1 = "52cb3ec90e8a8bea0e62e275ba577ad0f74821f7"
@@ -1465,14 +1633,14 @@ version = "0.3.2"
 
 [[deps.ConcurrentUtilities]]
 deps = ["Serialization", "Sockets"]
-git-tree-sha1 = "6cbbd4d241d7e6579ab354737f4dd95ca43946e1"
+git-tree-sha1 = "ea32b83ca4fefa1768dc84e504cc0a94fb1ab8d1"
 uuid = "f0e56b4a-5159-44fe-b623-3e5288b988bb"
-version = "2.4.1"
+version = "2.4.2"
 
 [[deps.Contour]]
-git-tree-sha1 = "d05d9e7b7aedff4e5b51a029dced05cfb6125781"
+git-tree-sha1 = "439e35b0b36e2e5881738abc8857bd92ad6ff9a8"
 uuid = "d38c429a-6771-53c6-b99e-75d170b6e991"
-version = "0.6.2"
+version = "0.6.3"
 
 [[deps.CoordinateTransformations]]
 deps = ["LinearAlgebra", "StaticArrays"]
@@ -1498,9 +1666,9 @@ version = "1.16.0"
 
 [[deps.DataStructures]]
 deps = ["Compat", "InteractiveUtils", "OrderedCollections"]
-git-tree-sha1 = "0f4b5d62a88d8f59003e43c25a8a90de9eb76317"
+git-tree-sha1 = "1d0a14036acb104d9e89698bd408f63ab58cdc82"
 uuid = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
-version = "0.18.18"
+version = "0.18.20"
 
 [[deps.Dates]]
 deps = ["Printf"]
@@ -1552,9 +1720,9 @@ version = "0.1.10"
 
 [[deps.Expat_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl"]
-git-tree-sha1 = "4558ab818dcceaab612d1bb8c19cee87eda2b83c"
+git-tree-sha1 = "1c6317308b9dc757616f0b5cb379db10494443a7"
 uuid = "2e619515-83b5-522b-bb60-26c02a35a201"
-version = "2.5.0+0"
+version = "2.6.2+0"
 
 [[deps.FFMPEG]]
 deps = ["FFMPEG_jll"]
@@ -1597,38 +1765,38 @@ uuid = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
 
 [[deps.FixedPointNumbers]]
 deps = ["Statistics"]
-git-tree-sha1 = "335bfdceacc84c5cdf16aadc768aa5ddfc5383cc"
+git-tree-sha1 = "05882d6995ae5c12bb5f36dd2ed3f61c98cbb172"
 uuid = "53c48c17-4a7d-5ca2-90c5-79b7896eea93"
-version = "0.8.4"
+version = "0.8.5"
 
 [[deps.Fontconfig_jll]]
-deps = ["Artifacts", "Bzip2_jll", "Expat_jll", "FreeType2_jll", "JLLWrappers", "Libdl", "Libuuid_jll", "Pkg", "Zlib_jll"]
-git-tree-sha1 = "21efd19106a55620a188615da6d3d06cd7f6ee03"
+deps = ["Artifacts", "Bzip2_jll", "Expat_jll", "FreeType2_jll", "JLLWrappers", "Libdl", "Libuuid_jll", "Zlib_jll"]
+git-tree-sha1 = "db16beca600632c95fc8aca29890d83788dd8b23"
 uuid = "a3f928ae-7b40-5064-980b-68af3947d34b"
-version = "2.13.93+0"
+version = "2.13.96+0"
 
 [[deps.Format]]
-git-tree-sha1 = "f3cf88025f6d03c194d73f5d13fee9004a108329"
+git-tree-sha1 = "9c68794ef81b08086aeb32eeaf33531668d5f5fc"
 uuid = "1fa38f19-a742-5d3f-a2b9-30dd87b9d5f8"
-version = "1.3.6"
+version = "1.3.7"
 
 [[deps.FreeType2_jll]]
 deps = ["Artifacts", "Bzip2_jll", "JLLWrappers", "Libdl", "Zlib_jll"]
-git-tree-sha1 = "d8db6a5a2fe1381c1ea4ef2cab7c69c2de7f9ea0"
+git-tree-sha1 = "5c1d8ae0efc6c2e7b1fc502cbe25def8f661b7bc"
 uuid = "d7e528f0-a631-5988-bf34-fe36492bcfd7"
-version = "2.13.1+0"
+version = "2.13.2+0"
 
 [[deps.FriBidi_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "aa31987c2ba8704e23c6c8ba8a4f769d5d7e4f91"
+deps = ["Artifacts", "JLLWrappers", "Libdl"]
+git-tree-sha1 = "1ed150b39aebcc805c26b93a8d0122c940f64ce2"
 uuid = "559328eb-81f9-559d-9380-de523a88c83c"
-version = "1.0.10+0"
+version = "1.0.14+0"
 
 [[deps.GLFW_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "Libglvnd_jll", "Xorg_libXcursor_jll", "Xorg_libXi_jll", "Xorg_libXinerama_jll", "Xorg_libXrandr_jll"]
-git-tree-sha1 = "ff38ba61beff76b8f4acad8ab0c97ef73bb670cb"
+deps = ["Artifacts", "JLLWrappers", "Libdl", "Libglvnd_jll", "Xorg_libXcursor_jll", "Xorg_libXi_jll", "Xorg_libXinerama_jll", "Xorg_libXrandr_jll", "xkbcommon_jll"]
+git-tree-sha1 = "3f74912a156096bd8fdbef211eff66ab446e7297"
 uuid = "0656b61e-2033-5cc2-a64a-77c0f6c09b89"
-version = "3.3.9+0"
+version = "3.4.0+0"
 
 [[deps.GR]]
 deps = ["Artifacts", "Base64", "DelimitedFiles", "Downloads", "GR_jll", "HTTP", "JSON", "Libdl", "LinearAlgebra", "Pkg", "Preferences", "Printf", "Random", "Serialization", "Sockets", "TOML", "Tar", "Test", "UUIDs", "p7zip_jll"]
@@ -1656,9 +1824,9 @@ version = "9.55.0+4"
 
 [[deps.Glib_jll]]
 deps = ["Artifacts", "Gettext_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Libiconv_jll", "Libmount_jll", "PCRE2_jll", "Zlib_jll"]
-git-tree-sha1 = "359a1ba2e320790ddbe4ee8b4d54a305c0ea2aff"
+git-tree-sha1 = "7c82e6a6cd34e9d935e9aa4051b66c6ff3af59ba"
 uuid = "7746bdde-850d-59dc-9ae8-88ece973131d"
-version = "2.80.0+0"
+version = "2.80.2+0"
 
 [[deps.Graphics]]
 deps = ["Colors", "LinearAlgebra", "NaNMath"]
@@ -1674,9 +1842,9 @@ version = "1.3.14+0"
 
 [[deps.Graphs]]
 deps = ["ArnoldiMethod", "Compat", "DataStructures", "Distributed", "Inflate", "LinearAlgebra", "Random", "SharedArrays", "SimpleTraits", "SparseArrays", "Statistics"]
-git-tree-sha1 = "899050ace26649433ef1af25bc17a815b3db52b7"
+git-tree-sha1 = "ebd18c326fa6cee1efb7da9a3b45cf69da2ed4d9"
 uuid = "86223c79-3864-5bf0-83f7-82e725a168b6"
-version = "1.9.0"
+version = "1.11.2"
 
 [[deps.Grisu]]
 git-tree-sha1 = "53bb909d1151e57e2484c3d1b53e19552b887fb2"
@@ -1685,9 +1853,9 @@ version = "1.0.2"
 
 [[deps.HTTP]]
 deps = ["Base64", "CodecZlib", "ConcurrentUtilities", "Dates", "ExceptionUnwrapping", "Logging", "LoggingExtras", "MbedTLS", "NetworkOptions", "OpenSSL", "Random", "SimpleBufferStream", "Sockets", "URIs", "UUIDs"]
-git-tree-sha1 = "995f762e0182ebc50548c434c171a5bb6635f8e4"
+git-tree-sha1 = "d1d712be3164d61d1fb98e7ce9bcbc6cc06b45ed"
 uuid = "cd3eb016-35fb-5094-929b-558a96fad6f3"
-version = "1.10.4"
+version = "1.10.8"
 
 [[deps.HarfBuzz_jll]]
 deps = ["Artifacts", "Cairo_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "Graphite2_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Pkg"]
@@ -1703,9 +1871,9 @@ version = "0.3.1"
 
 [[deps.HostCPUFeatures]]
 deps = ["BitTwiddlingConvenienceFunctions", "IfElse", "Libdl", "Static"]
-git-tree-sha1 = "eb8fed28f4994600e29beef49744639d985a04b2"
+git-tree-sha1 = "8e070b599339d622e9a081d17230d74a5c473293"
 uuid = "3e5b6fbb-0976-4d2c-9146-d79de83f2fb0"
-version = "0.1.16"
+version = "0.1.17"
 
 [[deps.Hyperscript]]
 deps = ["Test"]
@@ -1721,9 +1889,9 @@ version = "0.9.5"
 
 [[deps.IOCapture]]
 deps = ["Logging", "Random"]
-git-tree-sha1 = "8b72179abc660bfab5e28472e019392b97d0985c"
+git-tree-sha1 = "b6d6bfdd7ce25b0f9b2f6b3dd56b2673a66c8770"
 uuid = "b5f81e59-6552-4d32-b1f0-c071b021bf89"
-version = "0.2.4"
+version = "0.2.5"
 
 [[deps.IfElse]]
 git-tree-sha1 = "debdd00ffef04665ccbb3e150747a77560e8fad1"
@@ -1780,9 +1948,9 @@ version = "0.7.8"
 
 [[deps.ImageIO]]
 deps = ["FileIO", "IndirectArrays", "JpegTurbo", "LazyModules", "Netpbm", "OpenEXR", "PNGFiles", "QOI", "Sixel", "TiffImages", "UUIDs"]
-git-tree-sha1 = "bca20b2f5d00c4fbc192c3212da8fa79f4688009"
+git-tree-sha1 = "437abb322a41d527c197fa800455f79d414f0a3c"
 uuid = "82e4d734-157c-48bb-816b-45c225c6df19"
-version = "0.6.7"
+version = "0.6.8"
 
 [[deps.ImageMagick]]
 deps = ["FileIO", "ImageCore", "ImageMagick_jll", "InteractiveUtils"]
@@ -1834,15 +2002,15 @@ version = "0.10.1"
 
 [[deps.Images]]
 deps = ["Base64", "FileIO", "Graphics", "ImageAxes", "ImageBase", "ImageBinarization", "ImageContrastAdjustment", "ImageCore", "ImageCorners", "ImageDistances", "ImageFiltering", "ImageIO", "ImageMagick", "ImageMetadata", "ImageMorphology", "ImageQualityIndexes", "ImageSegmentation", "ImageShow", "ImageTransformations", "IndirectArrays", "IntegralArrays", "Random", "Reexport", "SparseArrays", "StaticArrays", "Statistics", "StatsBase", "TiledIteration"]
-git-tree-sha1 = "d438268ed7a665f8322572be0dabda83634d5f45"
+git-tree-sha1 = "12fdd617c7fe25dc4a6cc804d657cc4b2230302b"
 uuid = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
-version = "0.26.0"
+version = "0.26.1"
 
 [[deps.Imath_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl"]
-git-tree-sha1 = "3d09a9f60edf77f8a4d99f9e015e8fbf9989605d"
+git-tree-sha1 = "0936ba688c6d201805a83da835b55c61a180db52"
 uuid = "905a6f67-0a94-5f89-b386-d35d92009cd1"
-version = "3.1.7+0"
+version = "3.1.11+0"
 
 [[deps.IndirectArrays]]
 git-tree-sha1 = "012e604e1c7458645cb8b436f8fba789a51b257f"
@@ -1850,9 +2018,9 @@ uuid = "9b13fd28-a010-5f03-acff-a1bbcff69959"
 version = "1.0.0"
 
 [[deps.Inflate]]
-git-tree-sha1 = "ea8031dea4aff6bd41f1df8f2fdfb25b33626381"
+git-tree-sha1 = "d1b1b796e47d94588b3757fe84fbf65a5ec4a80d"
 uuid = "d25df0c9-e2be-5dd7-82c8-3ad0b3e990b9"
-version = "0.1.4"
+version = "0.1.5"
 
 [[deps.IntegralArrays]]
 deps = ["ColorTypes", "FixedPointNumbers", "IntervalSets"]
@@ -1862,9 +2030,9 @@ version = "0.1.5"
 
 [[deps.IntelOpenMP_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl"]
-git-tree-sha1 = "5fdf2fe6724d8caabf43b557b84ce53f3b7e2f6b"
+git-tree-sha1 = "14eb2b542e748570b56446f4c50fbfb2306ebc45"
 uuid = "1d5cc7b8-4909-519e-a0f8-d0f5ad9712d0"
-version = "2024.0.2+0"
+version = "2024.2.0+0"
 
 [[deps.InteractiveUtils]]
 deps = ["Markdown"]
@@ -1902,10 +2070,10 @@ uuid = "c8e1da08-722c-5040-9ed9-7db0dc04731e"
 version = "1.10.0"
 
 [[deps.JLD2]]
-deps = ["FileIO", "MacroTools", "Mmap", "OrderedCollections", "Pkg", "PrecompileTools", "Printf", "Reexport", "Requires", "TranscodingStreams", "UUIDs"]
-git-tree-sha1 = "5ea6acdd53a51d897672edb694e3cc2912f3f8a7"
+deps = ["FileIO", "MacroTools", "Mmap", "OrderedCollections", "Pkg", "PrecompileTools", "Reexport", "Requires", "TranscodingStreams", "UUIDs", "Unicode"]
+git-tree-sha1 = "5fe858cb863e211c6dedc8cce2dc0752d4ab6e2b"
 uuid = "033835bb-8acc-5ee8-8aae-3f567f8a3819"
-version = "0.4.46"
+version = "0.4.50"
 
 [[deps.JLFzf]]
 deps = ["Pipe", "REPL", "Random", "fzf_jll"]
@@ -1933,15 +2101,15 @@ version = "0.1.5"
 
 [[deps.JpegTurbo_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl"]
-git-tree-sha1 = "3336abae9a713d2210bb57ab484b1e065edd7d23"
+git-tree-sha1 = "c84a835e1a09b289ffcd2271bf2a337bbdda6637"
 uuid = "aacddb02-875f-59d6-b918-886e6ef4fbf8"
-version = "3.0.2+0"
+version = "3.0.3+0"
 
 [[deps.LAME_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "f6250b16881adf048549549fba48b1161acdac8c"
+deps = ["Artifacts", "JLLWrappers", "Libdl"]
+git-tree-sha1 = "170b660facf5df5de098d866564877e119141cbd"
 uuid = "c1c5ebd0-6772-5130-a774-d5fcae4a789d"
-version = "3.100.1+0"
+version = "3.100.2+0"
 
 [[deps.LERC_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1956,10 +2124,10 @@ uuid = "1d63c593-3942-5779-bab2-d838dc0a180e"
 version = "15.0.7+0"
 
 [[deps.LZO_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "e5b909bcf985c5e2605737d2ce278ed791b89be6"
+deps = ["Artifacts", "JLLWrappers", "Libdl"]
+git-tree-sha1 = "70c5da094887fd2cae843b8db33920bac4b6f07d"
 uuid = "dd4b983a-f0e5-5f8d-a1b7-129d4a5fb1ac"
-version = "2.10.1+0"
+version = "2.10.2+0"
 
 [[deps.LaTeXStrings]]
 git-tree-sha1 = "50901ebc375ed41dbf8058da26f9de442febbbec"
@@ -1968,9 +2136,9 @@ version = "1.3.1"
 
 [[deps.Latexify]]
 deps = ["Format", "InteractiveUtils", "LaTeXStrings", "MacroTools", "Markdown", "OrderedCollections", "Requires"]
-git-tree-sha1 = "cad560042a7cc108f5a4c24ea1431a9221f22c1b"
+git-tree-sha1 = "5b0d630f3020b82c0775a51d05895852f8506f50"
 uuid = "23fbe1c1-3f47-55db-b15f-69d7ec21a316"
-version = "0.16.2"
+version = "0.16.4"
 
     [deps.Latexify.extensions]
     DataFramesExt = "DataFrames"
@@ -1982,9 +2150,9 @@ version = "0.16.2"
 
 [[deps.LayoutPointers]]
 deps = ["ArrayInterface", "LinearAlgebra", "ManualMemory", "SIMDTypes", "Static", "StaticArrayInterface"]
-git-tree-sha1 = "62edfee3211981241b57ff1cedf4d74d79519277"
+git-tree-sha1 = "a9eaadb366f5493a5654e843864c13d8b107548c"
 uuid = "10f19ff3-798f-405d-979b-55457f8fc047"
-version = "0.1.15"
+version = "0.1.17"
 
 [[deps.LazyArtifacts]]
 deps = ["Artifacts", "Pkg"]
@@ -2029,10 +2197,10 @@ uuid = "e9f186c6-92d2-5b65-8a66-fee21dc1b490"
 version = "3.2.2+1"
 
 [[deps.Libgcrypt_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "Libgpg_error_jll", "Pkg"]
-git-tree-sha1 = "64613c82a59c120435c067c2b809fc61cf5166ae"
+deps = ["Artifacts", "JLLWrappers", "Libdl", "Libgpg_error_jll"]
+git-tree-sha1 = "9fd170c4bbfd8b935fdc5f8b7aa33532c991a673"
 uuid = "d4300ac3-e22c-5743-9152-c294e39db1e4"
-version = "1.8.7+0"
+version = "1.8.11+0"
 
 [[deps.Libglvnd_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg", "Xorg_libX11_jll", "Xorg_libXext_jll"]
@@ -2041,10 +2209,10 @@ uuid = "7e76a0d4-f3c7-5321-8279-8d96eeed0f29"
 version = "1.6.0+0"
 
 [[deps.Libgpg_error_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "c333716e46366857753e273ce6a69ee0945a6db9"
+deps = ["Artifacts", "JLLWrappers", "Libdl"]
+git-tree-sha1 = "fbb1f2bef882392312feb1ede3615ddc1e9b99ed"
 uuid = "7add5ba3-2f88-524e-9cd5-f83b8a55f7b8"
-version = "1.42.0+0"
+version = "1.49.0+0"
 
 [[deps.Libiconv_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl"]
@@ -2054,9 +2222,9 @@ version = "1.17.0+0"
 
 [[deps.Libmount_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl"]
-git-tree-sha1 = "dae976433497a2f841baadea93d27e68f1a12a97"
+git-tree-sha1 = "0c4f9c4f1a50d8f35048fa0532dabbadf702f81e"
 uuid = "4b2f31a3-9ecc-558c-b454-b3730dcb73e9"
-version = "2.39.3+0"
+version = "2.40.1+0"
 
 [[deps.Libtiff_jll]]
 deps = ["Artifacts", "JLLWrappers", "JpegTurbo_jll", "LERC_jll", "Libdl", "Pkg", "Zlib_jll", "Zstd_jll"]
@@ -2066,9 +2234,9 @@ version = "4.4.0+0"
 
 [[deps.Libuuid_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl"]
-git-tree-sha1 = "0a04a1318df1bf510beb2562cf90fb0c386f58c4"
+git-tree-sha1 = "5ee6203157c120d79034c748a2acba45b82b8807"
 uuid = "38a345b3-de98-5d2b-a5d3-14cd9215e700"
-version = "2.39.3+1"
+version = "2.40.1+0"
 
 [[deps.LinearAlgebra]]
 deps = ["Libdl", "OpenBLAS_jll", "libblastrampoline_jll"]
@@ -2082,9 +2250,9 @@ version = "2.12.0+0"
 
 [[deps.LogExpFunctions]]
 deps = ["DocStringExtensions", "IrrationalConstants", "LinearAlgebra"]
-git-tree-sha1 = "18144f3e9cbe9b15b070288eef858f71b291ce37"
+git-tree-sha1 = "a2d09619db4e765091ee5c6ffe8872849de0feea"
 uuid = "2ab3a3ac-af41-5b50-aa03-7779005ae688"
-version = "0.3.27"
+version = "0.3.28"
 
     [deps.LogExpFunctions.extensions]
     LogExpFunctionsChainRulesCoreExt = "ChainRulesCore"
@@ -2107,9 +2275,9 @@ version = "1.0.3"
 
 [[deps.LoopVectorization]]
 deps = ["ArrayInterface", "CPUSummary", "CloseOpenIntervals", "DocStringExtensions", "HostCPUFeatures", "IfElse", "LayoutPointers", "LinearAlgebra", "OffsetArrays", "PolyesterWeave", "PrecompileTools", "SIMDTypes", "SLEEFPirates", "Static", "StaticArrayInterface", "ThreadingUtilities", "UnPack", "VectorizationBase"]
-git-tree-sha1 = "0f5648fbae0d015e3abe5867bca2b362f67a5894"
+git-tree-sha1 = "8084c25a250e00ae427a379a5b607e7aed96a2dd"
 uuid = "bdcacae8-1622-11e9-2a5c-532679323890"
-version = "0.12.166"
+version = "0.12.171"
 
     [deps.LoopVectorization.extensions]
     ForwardDiffExt = ["ChainRulesCore", "ForwardDiff"]
@@ -2126,10 +2294,10 @@ uuid = "6c6e2e6c-3030-632d-7369-2d6c69616d65"
 version = "0.1.4"
 
 [[deps.MKL_jll]]
-deps = ["Artifacts", "IntelOpenMP_jll", "JLLWrappers", "LazyArtifacts", "Libdl"]
-git-tree-sha1 = "72dc3cf284559eb8f53aa593fe62cb33f83ed0c0"
+deps = ["Artifacts", "IntelOpenMP_jll", "JLLWrappers", "LazyArtifacts", "Libdl", "oneTBB_jll"]
+git-tree-sha1 = "f046ccd0c6db2832a9f639e2c669c6fe867e5f4f"
 uuid = "856f044c-d86e-5d09-b602-aeab76dc8ba7"
-version = "2024.0.0+0"
+version = "2024.2.0+0"
 
 [[deps.MacroTools]]
 deps = ["Markdown", "Random"]
@@ -2175,9 +2343,9 @@ version = "0.7.2"
 
 [[deps.Missings]]
 deps = ["DataAPI"]
-git-tree-sha1 = "f66bdc5de519e8f8ae43bdc598782d35a25b1272"
+git-tree-sha1 = "ec4f7fbeab05d7747bdf98eb74d130a2a2ed298d"
 uuid = "e1d29d7a-bbdc-5cf2-9ac0-f12de2c33e28"
-version = "1.1.0"
+version = "1.2.0"
 
 [[deps.Mmap]]
 uuid = "a63ad114-7e13-5084-954f-fe012c677804"
@@ -2200,9 +2368,9 @@ version = "1.0.2"
 
 [[deps.NearestNeighbors]]
 deps = ["Distances", "StaticArrays"]
-git-tree-sha1 = "ded64ff6d4fdd1cb68dfcbb818c69e144a5b2e4c"
+git-tree-sha1 = "91a67b4d73842da90b526011fa85c5c4c9343fe0"
 uuid = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
-version = "0.4.16"
+version = "0.4.18"
 
 [[deps.Netpbm]]
 deps = ["FileIO", "ImageCore", "ImageMetadata"]
@@ -2242,9 +2410,9 @@ version = "0.3.2"
 
 [[deps.OpenEXR_jll]]
 deps = ["Artifacts", "Imath_jll", "JLLWrappers", "Libdl", "Zlib_jll"]
-git-tree-sha1 = "a4ca623df1ae99d09bc9868b008262d0c0ac1e4f"
+git-tree-sha1 = "8292dd5c8a38257111ada2174000a33745b06d4e"
 uuid = "18a262bb-aa17-5467-a713-aee519bc75cb"
-version = "3.1.4+0"
+version = "3.2.4+0"
 
 [[deps.OpenJpeg_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Libtiff_jll", "LittleCMS_jll", "Pkg", "libpng_jll"]
@@ -2259,9 +2427,9 @@ version = "0.8.1+2"
 
 [[deps.OpenSSL]]
 deps = ["BitFlags", "Dates", "MozillaCACerts_jll", "OpenSSL_jll", "Sockets"]
-git-tree-sha1 = "af81a32750ebc831ee28bdaaba6e1067decef51e"
+git-tree-sha1 = "38cb508d080d21dc1128f7fb04f20387ed4c0af4"
 uuid = "4d8831e6-92b7-49fb-bdf8-b643e874388c"
-version = "1.4.2"
+version = "1.4.3"
 
 [[deps.OpenSSL_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl"]
@@ -2316,9 +2484,9 @@ version = "1.3.0"
 
 [[deps.Pixman_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "JLLWrappers", "LLVMOpenMP_jll", "Libdl"]
-git-tree-sha1 = "64779bc4c9784fee475689a1752ef4d5747c5e87"
+git-tree-sha1 = "35621f10a7531bc8fa58f74610b1bfb70a3cfc6b"
 uuid = "30392449-352a-5448-841d-b1acce4e97dc"
-version = "0.42.2+0"
+version = "0.43.4+0"
 
 [[deps.Pkg]]
 deps = ["Artifacts", "Dates", "Downloads", "FileWatching", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "Serialization", "TOML", "Tar", "UUIDs", "p7zip_jll"]
@@ -2333,9 +2501,9 @@ version = "0.3.3"
 
 [[deps.PlotThemes]]
 deps = ["PlotUtils", "Statistics"]
-git-tree-sha1 = "1f03a2d339f42dca4a4da149c7e15e9b896ad899"
+git-tree-sha1 = "6e55c6841ce3411ccb3457ee52fc48cb698d6fb0"
 uuid = "ccf2f8ad-2431-5c83-bf29-c5338b663b6a"
-version = "3.1.0"
+version = "3.2.0"
 
 [[deps.PlotUtils]]
 deps = ["ColorSchemes", "Colors", "Dates", "PrecompileTools", "Printf", "Random", "Reexport", "Statistics"]
@@ -2344,10 +2512,10 @@ uuid = "995b91a9-d308-5afd-9ec6-746e21dbc043"
 version = "1.4.1"
 
 [[deps.Plots]]
-deps = ["Base64", "Contour", "Dates", "Downloads", "FFMPEG", "FixedPointNumbers", "GR", "JLFzf", "JSON", "LaTeXStrings", "Latexify", "LinearAlgebra", "Measures", "NaNMath", "Pkg", "PlotThemes", "PlotUtils", "PrecompileTools", "Printf", "REPL", "Random", "RecipesBase", "RecipesPipeline", "Reexport", "RelocatableFolders", "Requires", "Scratch", "Showoff", "SparseArrays", "Statistics", "StatsBase", "UUIDs", "UnicodeFun", "UnitfulLatexify", "Unzip"]
-git-tree-sha1 = "3c403c6590dd93b36752634115e20137e79ab4df"
+deps = ["Base64", "Contour", "Dates", "Downloads", "FFMPEG", "FixedPointNumbers", "GR", "JLFzf", "JSON", "LaTeXStrings", "Latexify", "LinearAlgebra", "Measures", "NaNMath", "Pkg", "PlotThemes", "PlotUtils", "PrecompileTools", "Printf", "REPL", "Random", "RecipesBase", "RecipesPipeline", "Reexport", "RelocatableFolders", "Requires", "Scratch", "Showoff", "SparseArrays", "Statistics", "StatsBase", "TOML", "UUIDs", "UnicodeFun", "UnitfulLatexify", "Unzip"]
+git-tree-sha1 = "082f0c4b70c202c37784ce4bfbc33c9f437685bf"
 uuid = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
-version = "1.40.2"
+version = "1.40.5"
 
     [deps.Plots.extensions]
     FileIOExt = "FileIO"
@@ -2365,15 +2533,15 @@ version = "1.40.2"
 
 [[deps.PlutoUI]]
 deps = ["AbstractPlutoDingetjes", "Base64", "ColorTypes", "Dates", "FixedPointNumbers", "Hyperscript", "HypertextLiteral", "IOCapture", "InteractiveUtils", "JSON", "Logging", "MIMEs", "Markdown", "Random", "Reexport", "URIs", "UUIDs"]
-git-tree-sha1 = "71a22244e352aa8c5f0f2adde4150f62368a3f2e"
+git-tree-sha1 = "ab55ee1510ad2af0ff674dbcced5e94921f867a9"
 uuid = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
-version = "0.7.58"
+version = "0.7.59"
 
 [[deps.PolyesterWeave]]
 deps = ["BitTwiddlingConvenienceFunctions", "CPUSummary", "IfElse", "Static", "ThreadingUtilities"]
-git-tree-sha1 = "240d7170f5ffdb285f9427b92333c3463bf65bf6"
+git-tree-sha1 = "645bed98cd47f72f67316fd42fc47dee771aefcd"
 uuid = "1d0040c9-8b98-4ee7-8388-3f51789ca0ad"
-version = "0.2.1"
+version = "0.2.2"
 
 [[deps.Polynomials]]
 deps = ["LinearAlgebra", "RecipesBase"]
@@ -2409,9 +2577,9 @@ uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 
 [[deps.ProgressMeter]]
 deps = ["Distributed", "Printf"]
-git-tree-sha1 = "763a8ceb07833dd51bb9e3bbca372de32c0605ad"
+git-tree-sha1 = "80686d28ecb3ee7fb3ac5371cacaa0d673eb0d4a"
 uuid = "92933f4c-e287-5a05-a399-4b506db050ca"
-version = "1.10.0"
+version = "1.10.1"
 
 [[deps.QOI]]
 deps = ["ColorTypes", "FileIO", "FixedPointNumbers"]
@@ -2497,9 +2665,9 @@ version = "1.3.0"
 
 [[deps.Rotations]]
 deps = ["LinearAlgebra", "Quaternions", "Random", "StaticArrays"]
-git-tree-sha1 = "2a0a5d8569f481ff8840e3b7c84bbf188db6a3fe"
+git-tree-sha1 = "5680a9276685d392c87407df00d57c9924d9f11e"
 uuid = "6038ab10-8711-5258-84ad-4b1120ba62dc"
-version = "1.7.0"
+version = "1.7.1"
 weakdeps = ["RecipesBase"]
 
     [deps.Rotations.extensions]
@@ -2509,6 +2677,12 @@ weakdeps = ["RecipesBase"]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
 version = "0.7.0"
 
+[[deps.SIMD]]
+deps = ["PrecompileTools"]
+git-tree-sha1 = "2803cab51702db743f3fda07dd1745aadfbf43bd"
+uuid = "fdea26ae-647d-5447-a871-4b548cad5224"
+version = "3.5.0"
+
 [[deps.SIMDTypes]]
 git-tree-sha1 = "330289636fb8107c5f32088d2741e9fd7a061a5c"
 uuid = "94e857df-77ce-4151-89e5-788b33177be4"
@@ -2516,9 +2690,9 @@ version = "0.1.0"
 
 [[deps.SLEEFPirates]]
 deps = ["IfElse", "Static", "VectorizationBase"]
-git-tree-sha1 = "3aac6d68c5e57449f5b9b865c9ba50ac2970c4cf"
+git-tree-sha1 = "456f610ca2fbd1c14f5fcf31c6bfadc55e7d66e0"
 uuid = "476501e8-09a2-5ece-8869-fb82de89a1fa"
-version = "0.6.42"
+version = "0.6.43"
 
 [[deps.Scratch]]
 deps = ["Dates"]
@@ -2583,16 +2757,16 @@ uuid = "cae243ae-269e-4f55-b966-ac2d0dc13c15"
 version = "0.1.1"
 
 [[deps.Static]]
-deps = ["IfElse"]
-git-tree-sha1 = "d2fdac9ff3906e27f7a618d47b676941baa6c80c"
+deps = ["CommonWorldInvalidations", "IfElse", "PrecompileTools"]
+git-tree-sha1 = "87d51a3ee9a4b0d2fe054bdd3fc2436258db2603"
 uuid = "aedffcd0-7271-4cad-89d0-dc628f76c6d3"
-version = "0.8.10"
+version = "1.1.1"
 
 [[deps.StaticArrayInterface]]
 deps = ["ArrayInterface", "Compat", "IfElse", "LinearAlgebra", "PrecompileTools", "Requires", "SparseArrays", "Static", "SuiteSparse"]
-git-tree-sha1 = "5d66818a39bb04bf328e92bc933ec5b4ee88e436"
+git-tree-sha1 = "8963e5a083c837531298fc41599182a759a87a6d"
 uuid = "0d7ed370-da01-4f52-bd93-41d350b8b718"
-version = "1.5.0"
+version = "1.5.1"
 weakdeps = ["OffsetArrays", "StaticArrays"]
 
     [deps.StaticArrayInterface.extensions]
@@ -2601,9 +2775,9 @@ weakdeps = ["OffsetArrays", "StaticArrays"]
 
 [[deps.StaticArrays]]
 deps = ["LinearAlgebra", "PrecompileTools", "Random", "StaticArraysCore"]
-git-tree-sha1 = "bf074c045d3d5ffd956fa0a461da38a44685d6b2"
+git-tree-sha1 = "eeafab08ae20c62c44c8399ccb9354a04b80db50"
 uuid = "90137ffa-7385-5640-81b9-e52037218182"
-version = "1.9.3"
+version = "1.9.7"
 weakdeps = ["ChainRulesCore", "Statistics"]
 
     [deps.StaticArrays.extensions]
@@ -2611,9 +2785,9 @@ weakdeps = ["ChainRulesCore", "Statistics"]
     StaticArraysStatisticsExt = "Statistics"
 
 [[deps.StaticArraysCore]]
-git-tree-sha1 = "36b3d696ce6366023a0ea192b4cd442268995a0d"
+git-tree-sha1 = "192954ef1208c7019899fbf8049e717f92959682"
 uuid = "1e83bf80-4336-4d27-bf5d-d5a4f845583c"
-version = "1.4.2"
+version = "1.4.3"
 
 [[deps.Statistics]]
 deps = ["LinearAlgebra", "SparseArrays"]
@@ -2628,9 +2802,9 @@ version = "1.7.0"
 
 [[deps.StatsBase]]
 deps = ["DataAPI", "DataStructures", "LinearAlgebra", "LogExpFunctions", "Missings", "Printf", "Random", "SortingAlgorithms", "SparseArrays", "Statistics", "StatsAPI"]
-git-tree-sha1 = "1d77abd07f617c4868c33d4f5b9e1dbb2643c9cf"
+git-tree-sha1 = "5cf7606d6cef84b543b483848d4ae08ad9832b21"
 uuid = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
-version = "0.34.2"
+version = "0.34.3"
 
 [[deps.SuiteSparse]]
 deps = ["Libdl", "LinearAlgebra", "Serialization", "SparseArrays"]
@@ -2668,10 +2842,10 @@ uuid = "8290d209-cae3-49c0-8002-c8c24d57dab5"
 version = "0.5.2"
 
 [[deps.TiffImages]]
-deps = ["ColorTypes", "DataStructures", "DocStringExtensions", "FileIO", "FixedPointNumbers", "IndirectArrays", "Inflate", "Mmap", "OffsetArrays", "PkgVersion", "ProgressMeter", "UUIDs"]
-git-tree-sha1 = "34cc045dd0aaa59b8bbe86c644679bc57f1d5bd0"
+deps = ["ColorTypes", "DataStructures", "DocStringExtensions", "FileIO", "FixedPointNumbers", "IndirectArrays", "Inflate", "Mmap", "OffsetArrays", "PkgVersion", "ProgressMeter", "SIMD", "UUIDs"]
+git-tree-sha1 = "bc7fd5c91041f44636b2c134041f7e5263ce58ae"
 uuid = "731e570b-9d59-4bfa-96dc-6df516fadf69"
-version = "0.6.8"
+version = "0.10.0"
 
 [[deps.TiledIteration]]
 deps = ["OffsetArrays", "StaticArrayInterface"]
@@ -2680,9 +2854,9 @@ uuid = "06e1c1a7-607b-532d-9fad-de7d9aa2abac"
 version = "0.5.0"
 
 [[deps.TranscodingStreams]]
-git-tree-sha1 = "14389d51751169994b2e1317d5c72f7dc4f21045"
+git-tree-sha1 = "60df3f8126263c0d6b357b9a1017bb94f53e3582"
 uuid = "3bb67fe8-82b1-5028-8e26-92a6c54297fa"
-version = "0.10.6"
+version = "0.11.0"
 weakdeps = ["Random", "Test"]
 
     [deps.TranscodingStreams.extensions]
@@ -2718,9 +2892,9 @@ version = "0.4.1"
 
 [[deps.Unitful]]
 deps = ["Dates", "LinearAlgebra", "Random"]
-git-tree-sha1 = "3c793be6df9dd77a0cf49d80984ef9ff996948fa"
+git-tree-sha1 = "dd260903fdabea27d9b6021689b3cd5401a57748"
 uuid = "1986cc42-f94f-5a68-af5c-568840ba703d"
-version = "1.19.0"
+version = "1.20.0"
 
     [deps.Unitful.extensions]
     ConstructionBaseUnitfulExt = "ConstructionBase"
@@ -2732,9 +2906,9 @@ version = "1.19.0"
 
 [[deps.UnitfulLatexify]]
 deps = ["LaTeXStrings", "Latexify", "Unitful"]
-git-tree-sha1 = "e2d817cc500e960fdbafcf988ac8436ba3208bfd"
+git-tree-sha1 = "975c354fcd5f7e1ddcc1f1a23e6e091d99e99bc8"
 uuid = "45397f5d-5981-4c77-b2b3-fc36d6e9b728"
-version = "1.6.3"
+version = "1.6.4"
 
 [[deps.Unzip]]
 git-tree-sha1 = "ca0969166a028236229f63514992fc073799bb78"
@@ -2743,9 +2917,9 @@ version = "0.2.0"
 
 [[deps.VectorizationBase]]
 deps = ["ArrayInterface", "CPUSummary", "HostCPUFeatures", "IfElse", "LayoutPointers", "Libdl", "LinearAlgebra", "SIMDTypes", "Static", "StaticArrayInterface"]
-git-tree-sha1 = "7209df901e6ed7489fe9b7aa3e46fb788e15db85"
+git-tree-sha1 = "e7f5b81c65eb858bed630fe006837b935518aca5"
 uuid = "3d5dd08c-fd9d-11e8-17fa-ed2836048c2f"
-version = "0.21.65"
+version = "0.21.70"
 
 [[deps.Wayland_jll]]
 deps = ["Artifacts", "EpollShim_jll", "Expat_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Pkg", "XML2_jll"]
@@ -2767,15 +2941,15 @@ version = "1.0.0"
 
 [[deps.XML2_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Libiconv_jll", "Zlib_jll"]
-git-tree-sha1 = "07e470dabc5a6a4254ffebc29a1b3fc01464e105"
+git-tree-sha1 = "d9717ce3518dc68a99e6b96300813760d887a01d"
 uuid = "02c8fc9c-b97f-50b9-bbe4-9be30ff0a78a"
-version = "2.12.5+0"
+version = "2.13.1+0"
 
 [[deps.XSLT_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "Libgcrypt_jll", "Libgpg_error_jll", "Libiconv_jll", "Pkg", "XML2_jll", "Zlib_jll"]
-git-tree-sha1 = "91844873c4085240b95e795f692c4cec4d805f8a"
+deps = ["Artifacts", "JLLWrappers", "Libdl", "Libgcrypt_jll", "Libgpg_error_jll", "Libiconv_jll", "XML2_jll", "Zlib_jll"]
+git-tree-sha1 = "a54ee957f4c86b526460a720dbc882fa5edcbefc"
 uuid = "aed1982a-8fda-507f-9586-7b0439959a61"
-version = "1.1.34+0"
+version = "1.1.41+0"
 
 [[deps.Xorg_libX11_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Xorg_libxcb_jll", "Xorg_xtrans_jll"]
@@ -2802,10 +2976,10 @@ uuid = "a3789734-cfe1-5b06-b2d0-1dd0d9d62d05"
 version = "1.1.4+0"
 
 [[deps.Xorg_libXext_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg", "Xorg_libX11_jll"]
-git-tree-sha1 = "b7c0aa8c376b31e4852b360222848637f481f8c3"
+deps = ["Artifacts", "JLLWrappers", "Libdl", "Xorg_libX11_jll"]
+git-tree-sha1 = "d2d1a5c49fae4ba39983f63de6afcbea47194e85"
 uuid = "1082639a-0dae-5f34-9b06-72781eeb8cb3"
-version = "1.3.4+4"
+version = "1.3.6+0"
 
 [[deps.Xorg_libXfixes_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg", "Xorg_libX11_jll"]
@@ -2832,10 +3006,10 @@ uuid = "ec84b674-ba8e-5d96-8ba1-2a689ba10484"
 version = "1.5.2+4"
 
 [[deps.Xorg_libXrender_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg", "Xorg_libX11_jll"]
-git-tree-sha1 = "19560f30fd49f4d4efbe7002a1037f8c43d43b96"
+deps = ["Artifacts", "JLLWrappers", "Libdl", "Xorg_libX11_jll"]
+git-tree-sha1 = "47e45cd78224c53109495b3e324df0c37bb61fbe"
 uuid = "ea2f1a96-1ddc-540d-b46f-429655e07cfa"
-version = "0.9.10+4"
+version = "0.9.11+0"
 
 [[deps.Xorg_libpthread_stubs_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl"]
@@ -2845,9 +3019,9 @@ version = "0.1.1+0"
 
 [[deps.Xorg_libxcb_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "XSLT_jll", "Xorg_libXau_jll", "Xorg_libXdmcp_jll", "Xorg_libpthread_stubs_jll"]
-git-tree-sha1 = "b4bfde5d5b652e22b9c790ad00af08b6d042b97d"
+git-tree-sha1 = "bcd466676fef0878338c61e655629fa7bbc69d8e"
 uuid = "c7cfdc94-dc32-55de-ac96-5a1b8d977c5b"
-version = "1.15.0+0"
+version = "1.17.0+0"
 
 [[deps.Xorg_libxkbfile_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Xorg_libX11_jll"]
@@ -2910,9 +3084,9 @@ version = "1.2.13+1"
 
 [[deps.Zstd_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl"]
-git-tree-sha1 = "49ce682769cd5de6c72dcf1b94ed7790cd08974c"
+git-tree-sha1 = "e678132f07ddb5bfa46857f0d7620fb9be675d3b"
 uuid = "3161d3a3-bdf6-5164-811a-617609db77b4"
-version = "1.5.5+0"
+version = "1.5.6+0"
 
 [[deps.fzf_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl"]
@@ -2921,10 +3095,10 @@ uuid = "214eeab7-80f7-51ab-84ad-2988db7cef09"
 version = "0.43.0+0"
 
 [[deps.libaom_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "3a2ea60308f0996d26f1e5354e10c24e9ef905d4"
+deps = ["Artifacts", "JLLWrappers", "Libdl"]
+git-tree-sha1 = "1827acba325fdcdf1d2647fc8d5301dd9ba43a9d"
 uuid = "a4ae2306-e953-59d6-aa16-d00cac43593b"
-version = "3.4.0+0"
+version = "3.9.0+0"
 
 [[deps.libass_jll]]
 deps = ["Artifacts", "Bzip2_jll", "FreeType2_jll", "FriBidi_jll", "HarfBuzz_jll", "JLLWrappers", "Libdl", "Pkg", "Zlib_jll"]
@@ -2965,6 +3139,12 @@ version = "1.3.7+1"
 deps = ["Artifacts", "Libdl"]
 uuid = "8e850ede-7688-5339-a07c-302acd2aaf8d"
 version = "1.52.0+1"
+
+[[deps.oneTBB_jll]]
+deps = ["Artifacts", "JLLWrappers", "Libdl"]
+git-tree-sha1 = "7d0ea0f4895ef2f5cb83645fa689e52cb55cf493"
+uuid = "1317d2d5-d96f-522e-a858-c73665f53c3e"
+version = "2021.12.0+0"
 
 [[deps.p7zip_jll]]
 deps = ["Artifacts", "Libdl"]
@@ -3022,10 +3202,10 @@ version = "1.4.1+1"
 # ╟─69ae0195-5726-405e-9cf8-fbdd30c0d3eb
 # ╟─8fd5a173-3efe-4554-955c-f1281323dd9f
 # ╟─d828b425-051e-4e75-8bda-e27ba8bc4ed6
-# ╠═28dafdf8-4ed1-48cf-9fe2-6b669ed16aba
+# ╟─28dafdf8-4ed1-48cf-9fe2-6b669ed16aba
 # ╟─c92f0304-c0a2-45c8-bd14-f6a289d805ff
 # ╟─b2b8ec59-f073-4faf-a549-4a0cca54348e
-# ╠═886d4189-651a-47b1-ad89-6b7e2a684978
+# ╟─886d4189-651a-47b1-ad89-6b7e2a684978
 # ╟─b9eda326-f335-4566-aa6b-a4d25e5f8d2a
 # ╟─b6426840-25cf-4f08-9c1d-604ffbd540c8
 # ╠═fe6f830b-c2d7-4317-b647-27a6858cc2f3
@@ -3072,13 +3252,25 @@ version = "1.4.1+1"
 # ╠═b8e2adc5-4f63-4ec1-8395-874297b7c27f
 # ╠═0ccdd4a3-e8db-4d24-8da9-629cea9c7479
 # ╠═4ea5da47-e0e2-4b5d-bb50-d9105e9e63a2
-# ╠═5ee5d537-a9a9-4f00-86fe-8ffd52347d24
+# ╟─5ee5d537-a9a9-4f00-86fe-8ffd52347d24
 # ╠═20cd3f94-796e-4488-af50-d8a6a45119d3
 # ╠═9c131970-d45c-4f51-86cd-6cf6f3f4718a
 # ╟─22ad9ba6-7d35-420a-a7d1-52ea948134e6
 # ╠═8b7ad2c5-2fc3-4e16-bb47-6b60bdc40083
-# ╟─f1e67d5f-ffa3-43ca-9156-a4369f293880
-# ╠═0ad2901d-ad54-4a64-83e8-411c788f0f19
+# ╟─34f7b8ed-813f-4afd-aa61-88471db1714e
+# ╟─e6ccde94-7e14-482a-b97f-4fb764674eae
+# ╟─cf641a29-14cd-411f-b0e4-86164cfa54ad
+# ╠═140b40e3-745d-4379-978d-fd7854a97c2d
+# ╟─879ed4d3-a846-4ea9-b3c7-f17f9518fe29
+# ╠═7238526e-b1c9-4aac-a97b-139c53138803
+# ╟─241c6fc4-d556-446a-ac0a-871b1bc1709c
+# ╟─e3e86596-6604-46f9-a6df-82ef7ee21ebb
+# ╠═9efde71a-6a45-4c2c-a7ab-236fdc07c549
+# ╟─e034819e-2f97-460f-a8d0-f0901ddfd40e
+# ╟─f3a45e02-2467-4e1a-b7d8-33b004dc2b97
+# ╟─57cf5b1e-5d33-448d-a672-b06e7318a51a
+# ╟─7b828088-0906-46fd-b9c3-25516b577808
+# ╟─e093acf2-c092-4f39-83bb-ea5bf050c82c
 # ╟─baa9b63d-7109-4c1d-9251-2689daab0b8f
 # ╠═16ed7e4e-f70e-11ee-29ca-9d31a0704ed2
 # ╟─7a21d992-dcac-42e0-867e-2348e54b7018
@@ -3108,21 +3300,24 @@ version = "1.4.1+1"
 # ╟─3c502d3f-7131-4d4f-87b6-9f3c2e20f94a
 # ╟─88baaa6e-51a9-4c38-b753-09bdd389bb11
 # ╟─ac073bb7-6c08-4d5a-b533-c521b0f7a8d3
-# ╠═eeb5a65f-1a4a-4440-8d9d-ac0e2b01eefe
+# ╟─eeb5a65f-1a4a-4440-8d9d-ac0e2b01eefe
 # ╟─d5c667c3-6c48-414d-9ad5-e3962550a8f0
 # ╟─4735c79e-00cc-45f1-b367-d2aba418985c
 # ╟─54a174ba-4210-420f-b5e9-2ad0f4f254e0
 # ╟─437d0bb0-4c9f-4550-a709-25e29bc5f42c
 # ╟─59ea916b-974d-49ec-876c-837193664058
 # ╠═91a52719-187a-4967-9c2d-78a965bc4da1
-# ╠═fd6b76d8-ebcb-4093-b17c-2c15c20bc8c4
 # ╠═9c461725-fc55-4d28-835a-fbf3831cf06d
 # ╠═8154e276-3258-4ec4-aca1-1b73f3c3c4e6
+# ╠═a7ecf354-59aa-40fb-bfae-beb200664a91
+# ╠═07ae1e36-46f4-4372-8f23-28c8b31a2d1a
+# ╠═6e6740b0-13c2-4925-ba86-654c3093f977
+# ╠═e920d8bb-300a-4445-ba78-d9d57842627d
 # ╠═cf1766bf-49ef-422c-99fa-9123efe00485
 # ╠═75d03671-c3f0-4049-bb80-d3e2537def12
-# ╟─2515968b-a577-4f42-8d79-a4341b25435e
-# ╟─0bd5e0f8-9a18-49dd-9576-a2ef87704339
 # ╠═8b58ab34-18e4-4d92-b52e-bad87cae91e4
 # ╠═77fc6bb2-2878-428c-8c08-f3778da2c4ee
+# ╠═b698e689-7e30-4846-afbf-e5c0f3873b6c
+# ╠═9eb10d09-dfac-44ac-b38d-e469d9e75fa3
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002

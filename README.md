@@ -1,7 +1,7 @@
 # Convolutions and Content Aware Image Resizing With Seams
 
 
-This project explores **convolution**, **seam carving**, and **seam adding** for image resizing and manipulation in a PLuto notebook using Julia. The notebook is designed to work within the Julia programming language and leverages Pluto.jl for interactive, reactive coding.
+This project explores **convolution**, **seam carving**, and **seam adding** for image resizing and manipulation in a Pluto notebook using Julia. The notebook is designed to work within the Julia programming language and leverages Pluto.jl for interactive, reactive coding.
 
 ## Convolution
 
@@ -16,11 +16,11 @@ Convolution is performed by sliding a small matrix, known as a **kernel** or **f
 
 **Note**: Mathematically, the kernel is mirrored before iterating over the dataset. This mirroring is important for maintaining the proper orientation of the kernel during convolution. However, this step can often be ignored when dealing with images, as the kernel can be defined to suit the specific application directly.
 
-## Edge Handling
+### Edge Handling
 
 When the kernel overlaps the edges of the dataset, parts of it may extend beyond the boundaries. Instead of filling these areas with zeros, this project uses the **geometrically closest value** to handle these edge cases. This ensures that the convolution operation at the edges is smoother and more consistent with the surrounding data, as it utilizes the nearest valid data point rather than arbitrary zeros.
 
-## Example Kernels and Their Effects
+### Example Kernels and Their Effects
 
 Different kernels yield different transformations:
 
@@ -71,4 +71,9 @@ Different kernels yield different transformations:
 By experimenting with different kernels, you can achieve various effects such as blurring, sharpening, and edge detection.
 
 
-## Seam 
+## Content-Aware Image Resizing
+
+## Seam Carving
+
+Seam carving is a technique for content-aware image resizing that removes "seams" (low-energy paths) from the image. The primary goal is to retain the most important features while resizing the image in a way that looks natural.
+

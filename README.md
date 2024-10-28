@@ -34,22 +34,37 @@ Different kernels yield different transformations:
 
     Example:
     ```
-    [  -0.5  -1  -0.5 ]
-    [ -1  8  -1 ]
-    [  -0.5  -1  -0.5 ]
+    [ -0.5  -1  -0.5 ]
+    [  -1    8   -1  ]
+    [ -0.5  -1  -0.5 ]
     ```
 
 - **Gaussian Kernel**: This kernel uses a weighted average based on the Gaussian distribution, where central values have more weight than peripheral values, resulting in a smoother, natural blur.
 
     Example:
     ```
-    1/256 * [  1   4   6   4   1 ]
-            [  4  16  24  16   4 ]
-            [  6  24  36  24   6 ]
-            [  4  16  24  16   4 ]
-            [  1   4   6   4   1 ]
+    1/256 * [ 1   4   6   4   1 ]
+            [ 4  16  24  16   4 ]
+            [ 6  24  36  24   6 ]
+            [ 4  16  24  16   4 ]
+            [ 1   4   6   4   1 ]
     ```
 
+- **Sobel Kernels**: The sobel kernels detect changes in brightness in the direction of the sobel filter. This can be used to detect edges in an image.
+
+  Sobel Y:
+  ```
+    [ -0.125   -0.25   -0.125 ]
+    [    0        0       0   ]
+    [  0.125    0.25    0.125 ]
+  ```
+  Sobel X:
+  ```
+    [ -0.125   0   0.125 ]
+    [ -0.25    0   0.25  ]
+    [ -0.125   0   0.125 ]
+  ```
+  
 By experimenting with different kernels, you can achieve various effects such as blurring, sharpening, and edge detection.
 
 ---

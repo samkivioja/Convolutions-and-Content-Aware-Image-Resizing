@@ -1,8 +1,11 @@
 # Convolutions and Content Aware Image Resizing With Seams
 
-This project demonstrates how to apply convolution operations to a dataset, such as a matrix of numbers or an image, using Julia. Convolution is a common technique in data processing and image manipulation, used to extract features, apply filters, and modify the dataset in various ways. 
+
+This project explores **convolution**, **seam carving**, and **seam adding** for image resizing and manipulation in a PLuto notebook using Julia. The notebook is designed to work within the Julia programming language and leverages Pluto.jl for interactive, reactive coding.
 
 ## Convolution
+
+Convolution is a common technique in data processing and image manipulation, used to extract features, apply filters, and modify the dataset in various ways. 
 
 Convolution is performed by sliding a small matrix, known as a **kernel** or **filter**, over each position in the dataset and calculating an output for each position based on the weighted combination of neighboring values. Here’s how it works:
 
@@ -67,6 +70,5 @@ Different kernels yield different transformations:
   
 By experimenting with different kernels, you can achieve various effects such as blurring, sharpening, and edge detection.
 
----
 
-This project is a flexible framework for applying convolution to datasets in Julia, with customizable kernels to suit different processing needs.
+## Seam 

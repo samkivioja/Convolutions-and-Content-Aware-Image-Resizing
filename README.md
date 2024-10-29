@@ -125,8 +125,9 @@ This same operation can be done in the horizontal direction to reduce image heig
 
 ## Seam Adding
 
-While enlargening the image with seams the lowest energy seam is duplicated until target size is reached. Only using the lowest energy seam to enlarge the image would result in the same seam getting duplicated over and over. Instead the seams are added in the order of removal.
+While enlargening the image with seams the lowest energy seam is duplicated until target size is reached. Only using the lowest energy seam to enlarge the image would result in the same seam getting duplicated over and over. Instead the seams are added in the order of removal. 
+When enlargening the image in both dimensions at the same time, the image's smaller dimension is favored. This means that if the image's height is larger than it's width, then vertical seams are inserted first before the target width is reached before adding horizontal seams.
 
 ## Image Resizing With Seams
 
-When resizing an image with seams, seam removal is favoured before seam adding. This means that if the target size has larger width but smaller height than the original image, then seams are removed until the target height is reached and only after that seams are added to reach the target width/size.
+When resizing an image with seams, seam removal is favored before seam adding. This means that if the target size has larger width but smaller height than the original image, then seams are removed until the target height is reached and only after that seams are added to reach the target width/size.

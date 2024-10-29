@@ -78,7 +78,7 @@ By experimenting with different kernels, you can achieve various effects such as
 Seam carving is a technique for content-aware image resizing that removes "seams" (low-energy paths) from the image. The primary goal is to retain the most important features while resizing the image in a way that looks natural.
 
 **Seam carving** resizes images by intelligently removing or adding low-energy paths, or "seams," to minimize visual distortion. Here, convolution is used to identify these seams by calculating an **energy function** that measures the importance of each pixel based on edge strength.
-When resizing in both dimensions 
+When seam carving in both dimensions at the same time the total lowest energy seam (orientation doesn't matter) is removed until either target width or target height is reached. After which only seams in the other direction are removed until target size is reached.
 
 ### Seam Carving Workflow
 These steps are repeated until enough seams are removed to reach the target size.
@@ -123,4 +123,10 @@ Once the cumulative energy map is computed, the lowest-energy seam is found by t
 
 This same operation can be done in the horizontal direction to reduce image height.
 
+## Seam Adding
 
+While enlargening the image with seams the lowest energy seam is duplicated until target size is reached. Only using the lowest energy seam to enlarge the image would result in the same seam getting duplicated over and over. Instead the seams are added in the order of removal.
+
+## Image Resizing With Seams
+
+When resizing an image with seams, seam removal is favoured before seam adding. This means that if the target size has larger width but smaller height than the original image, then seams are removed until the target height is reached and only after that seams are added to reach the target width/size.
